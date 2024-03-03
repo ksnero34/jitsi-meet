@@ -216,7 +216,7 @@ export const commonStyles = (theme: Theme) => {
             height: 48,
             justifyContent: 'center',
             width: 48,
-
+            margin: 'auto',
             '@media (hover: hover) and (pointer: fine)': {
                 '&:hover': {
                     backgroundColor: theme.palette.ui04

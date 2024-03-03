@@ -89,8 +89,11 @@ export function endRoomLockRequest(
  *     props: PropTypes
  * }}
  */
-export function _openPasswordRequiredPrompt(conference: IJitsiConference) {
-    return openDialog(PasswordRequiredPrompt, { conference });
+// export function _openPasswordRequiredPrompt(conference: IJitsiConference) {
+//     return openDialog(PasswordRequiredPrompt, { conference });
+// }
+export function _openPasswordRequiredPrompt(conference: IJitsiConference, passwordErrorCount: number) {
+    return openDialog(PasswordRequiredPrompt, { conference, passwordErrorCount });
 }
 
 /**

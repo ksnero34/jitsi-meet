@@ -20,6 +20,9 @@ import PasswordRequiredPrompt from './components/PasswordRequiredPrompt';
 import { LOCKED_REMOTELY } from './constants';
 import logger from './logger';
 
+
+let passwordErrorCount = -1;
+
 /**
  * Middleware that captures conference failed and checks for password required
  * error and requests a dialog for user to enter password.
@@ -54,6 +57,7 @@ MiddlewareRegistry.register(store => next => action => {
                     titleKey: 'notify.passwordSetRemotely'
                 }, NOTIFICATION_TIMEOUT_TYPE.SHORT));
         } else if (previousLockedState === LOCKED_REMOTELY && !currentLockedState) {
+            APP.conference._writeLog('Password Changed');
             store.dispatch(
                 showNotification({
                     titleKey: 'notify.passwordRemovedRemotely'
@@ -82,6 +86,7 @@ MiddlewareRegistry.register(store => next => action => {
  * @returns {*}
  */
 function _conferenceJoined({ dispatch }: IStore, next: Function, action: AnyAction) {
+    APP.conference._writeLog('Join Room');
     dispatch(hideDialog(PasswordRequiredPrompt));
 
     return next(action);
@@ -103,15 +108,19 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
     const { conference, error } = action;
 
     if (conference && error.name === JitsiConferenceErrors.PASSWORD_REQUIRED) {
+        passwordErrorCount++;
         // XXX The feature room-lock affords recovery after CONFERENCE_FAILED
         // caused by JitsiConferenceErrors.PASSWORD_REQUIRED.
         if (typeof error.recoverable === 'undefined') {
             error.recoverable = true;
         }
         if (error.recoverable) {
-            dispatch(_openPasswordRequiredPrompt(conference));
+            APP.conference._writeLog('Fail to Join. Password Required');
+            dispatch(_openPasswordRequiredPrompt(conference, passwordErrorCount));
+            //dispatch(_openPasswordRequiredPrompt(conference));
         }
     } else {
+        passwordErrorCount = -1;
         dispatch(hideDialog(PasswordRequiredPrompt));
     }
 
@@ -131,6 +140,7 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
  * @returns {*}
  */
 function _setPasswordFailed(store: IStore, next: Function, action: AnyAction) {
+    APP.conference._writeLog('Changing Password Failed');
     if (typeof APP !== 'undefined') {
         // TODO Remove this logic when displaying of error messages on web is
         // handled through react/redux.

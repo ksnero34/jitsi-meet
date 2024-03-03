@@ -97,8 +97,8 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
         };
 
         const elementType = showLabel ? 'li' : 'div';
-        const useTooltip = this.tooltip && this.tooltip.length > 0;
-
+        //const useTooltip = this.tooltip && this.tooltip.length > 0;
+        const useTooltip = false;
         if (contextMenu) {
             return (
                 <ContextMenuItem
@@ -119,6 +119,9 @@ export default class ToolboxItem extends AbstractToolboxItem<IProps> {
                     { this.label }
                 </span> }
                 { elementAfter }
+                { !showLabel && 
+                    <div className="toolbox-name"><span className="toolbox-name-text">{ this.tooltip }</span></div>
+                }
             </Fragment>
         );
 

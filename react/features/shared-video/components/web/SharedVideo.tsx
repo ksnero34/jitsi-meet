@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-// @ts-expect-error
 import Filmstrip from '../../../../../modules/UI/videolayout/Filmstrip';
 import { IReduxState } from '../../../app/types';
 import { getLocalParticipant } from '../../../base/participants/functions';
@@ -70,21 +69,21 @@ class SharedVideo extends Component<IProps> {
         let width;
         let height;
 
-        if (interfaceConfig.VERTICAL_FILMSTRIP) {
-            if (filmstripVisible) {
-                width = `${clientWidth - filmstripWidth}px`;
-            } else {
+        // if (interfaceConfig.VERTICAL_FILMSTRIP) {
+        //     if (filmstripVisible) {
+        //         width = `${clientWidth - filmstripWidth}px`;
+        //     } else {
                 width = `${clientWidth}px`;
-            }
-            height = `${clientHeight - getToolboxHeight()}px`;
-        } else {
-            if (filmstripVisible) {
-                height = `${clientHeight - Filmstrip.getFilmstripHeight()}px`;
-            } else {
+        //     }
+        //     height = `${clientHeight - getToolboxHeight()}px`;
+        // } else {
+        //     if (filmstripVisible) {
+        //         height = `${clientHeight - Filmstrip.getFilmstripHeight()}px`;
+        //     } else {
                 height = `${clientHeight}px`;
-            }
-            width = `${clientWidth}px`;
-        }
+        //     }
+        //     width = `${clientWidth}px`;
+        // }
 
         return {
             width,

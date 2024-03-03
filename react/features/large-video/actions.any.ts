@@ -8,7 +8,8 @@ import {
     getParticipantById,
     getPinnedParticipant,
     getRemoteParticipants,
-    getVirtualScreenshareParticipantByOwnerId
+    getVirtualScreenshareParticipantByOwnerId,
+    isParticipantModerator
 } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
 import { isStageFilmstripAvailable } from '../filmstrip/functions';
@@ -145,57 +146,69 @@ function _electParticipantInLargeVideo(state: IReduxState) {
         return participant.id;
     }
 
-    const autoPinSetting = getAutoPinSetting();
-
-    if (autoPinSetting) {
-        // when the setting auto_pin_latest_screen_share is true as spot does, prioritize local screenshare
-        if (autoPinSetting === true) {
-            const localScreenShareParticipant = getLocalScreenShareParticipant(state);
-
-            if (localScreenShareParticipant) {
-                return localScreenShareParticipant.id;
-            }
-        }
-
-        // Pick the most recent remote screenshare that was added to the conference.
-        const remoteScreenShares = state['features/video-layout'].remoteScreenShares;
-
-        if (remoteScreenShares?.length) {
-            return remoteScreenShares[remoteScreenShares.length - 1];
-        }
-    }
-
-    // Next, pick the dominant speaker (other than self).
-    participant = getDominantSpeakerParticipant(state);
-    if (participant && !participant.local) {
-        // Return the screensharing participant id associated with this endpoint if multi-stream is enabled and
-        // auto_pin_latest_screen_share setting is disabled.
-        const screenshareParticipant = getVirtualScreenshareParticipantByOwnerId(state, participant.id);
-
-        return screenshareParticipant?.id ?? participant.id;
-    }
-
-    // In case this is the local participant.
-    participant = undefined;
-
-    // Next, pick the most recent participant with video.
-    const lastVisibleRemoteParticipant = _electLastVisibleRemoteParticipant(state);
-
-    if (lastVisibleRemoteParticipant) {
-        return lastVisibleRemoteParticipant.id;
-    }
-
-    // Last, select the participant that joined last (other than poltergist or other bot type participants).
+    // 참가자 목록 for 루프 돌려서 moderator 역할인 참가자 return
     const participants = [ ...getRemoteParticipants(state).values() ];
-
-    for (let i = participants.length; i > 0 && !participant; i--) {
-        const p = participants[i - 1];
-
-        !p.botType && (participant = p);
+    let participantCnt = participants.length;
+    for(let i = 0; i < participantCnt; i++) {
+        const p = participants[i];
+        //
+        if(isParticipantModerator(p)) {
+            //
+            return p.id;
+        }
     }
-    if (participant) {
-        return participant.id;
-    }
 
-    return getLocalParticipant(state)?.id;
+    // const autoPinSetting = getAutoPinSetting();
+
+    // if (autoPinSetting) {
+    //     // when the setting auto_pin_latest_screen_share is true as spot does, prioritize local screenshare
+    //     if (autoPinSetting === true) {
+    //         const localScreenShareParticipant = getLocalScreenShareParticipant(state);
+
+    //         if (localScreenShareParticipant) {
+    //             return localScreenShareParticipant.id;
+    //         }
+    //     }
+
+    //     // Pick the most recent remote screenshare that was added to the conference.
+    //     const remoteScreenShares = state['features/video-layout'].remoteScreenShares;
+
+    //     if (remoteScreenShares?.length) {
+    //         return remoteScreenShares[remoteScreenShares.length - 1];
+    //     }
+    // }
+
+    // // Next, pick the dominant speaker (other than self).
+    // participant = getDominantSpeakerParticipant(state);
+    // if (participant && !participant.local) {
+    //     // Return the screensharing participant id associated with this endpoint if multi-stream is enabled and
+    //     // auto_pin_latest_screen_share setting is disabled.
+    //     const screenshareParticipant = getVirtualScreenshareParticipantByOwnerId(state, participant.id);
+
+    //     return screenshareParticipant?.id ?? participant.id;
+    // }
+
+    // // In case this is the local participant.
+    // participant = undefined;
+
+    // // Next, pick the most recent participant with video.
+    // const lastVisibleRemoteParticipant = _electLastVisibleRemoteParticipant(state);
+
+    // if (lastVisibleRemoteParticipant) {
+    //     return lastVisibleRemoteParticipant.id;
+    // }
+
+    // // Last, select the participant that joined last (other than poltergist or other bot type participants).
+    // const participants = [ ...getRemoteParticipants(state).values() ];
+
+    // for (let i = participants.length; i > 0 && !participant; i--) {
+    //     const p = participants[i - 1];
+
+    //     !p.botType && (participant = p);
+    // }
+    // if (participant) {
+    //     return participant.id;
+    // }
+
+    // return getLocalParticipant(state)?.id;
 }

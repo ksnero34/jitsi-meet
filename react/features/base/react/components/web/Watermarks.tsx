@@ -164,7 +164,7 @@ class Watermarks extends Component<IProps, State> {
 
         if (_showJitsiWatermark) {
             const style = {
-                backgroundImage: `url(${_logoUrl})`,
+                //backgroundImage: `url(${_logoUrl})`,
                 position: _logoLink ? 'static' : 'absolute'
             } as const;
 
@@ -175,9 +175,9 @@ class Watermarks extends Component<IProps, State> {
             if (_logoLink) {
                 reactElement = (
                     <a
-                        aria-label = { t('jitsiHome', { logo: interfaceConfig.APP_NAME }) }
+                        //aria-label = { t('jitsiHome', { logo: interfaceConfig.APP_NAME }) }
                         className = { className }
-                        href = { _logoLink }
+                        //href = { _logoLink }
                         target = '_new'>
                         { reactElement }
                     </a>

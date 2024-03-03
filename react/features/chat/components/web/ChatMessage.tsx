@@ -172,13 +172,13 @@ const ChatMessage = ({
             className = { cx(classes.chatMessageWrapper, type) }
             id = { message.messageId }
             tabIndex = { -1 }>
+            {showDisplayName && _renderDisplayName()}
             <div
                 className = { cx('chatmessage', classes.chatMessage, type,
                     message.privateMessage && 'privatemessage',
                     message.lobbyChat && !knocking && 'lobbymessage') }>
                 <div className = { classes.replyWrapper }>
                     <div className = { cx('messagecontent', classes.messageContent) }>
-                        {showDisplayName && _renderDisplayName()}
                         <div className = { cx('usermessage', classes.userMessage) }>
                             <span className = 'sr-only'>
                                 {message.displayName === message.recipient

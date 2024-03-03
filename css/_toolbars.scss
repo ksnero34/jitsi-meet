@@ -61,6 +61,25 @@
     .toolbox-button-wth-dialog {
         display: inline-block;
     }
+
+    input[type="checkbox"] {
+        width: max-content;
+    }
+
+    input[type="checkbox"] + svg {
+        color: #ffffff;
+        --local-border: #6ebcff;
+        --local-border-focus: #0376da;
+        --local-border-active: #0376da;
+        --local-border-hover: #0376da;
+        --local-border-checked: #0376da;
+        --local-border-checked-focus: #6ebcff;
+        --local-border-checked-hover: #0376da;
+    }
+
+    input[type="checkbox"] + svg + span {
+        color: #ffffff;
+    }
 }
 
 .toolbar-button-with-badge {
@@ -95,6 +114,16 @@
     content: '';
     background: $newToolbarBackgroundColor;
     padding-bottom: env(safe-area-inset-bottom, 0);
+}
+
+.toolbox-name {
+    height: 20px;
+    line-height: 25px;
+}
+
+.toolbox-name-text {
+    font-size: 11px;
+    color:#fff;
 }
 
 .overflow-menu-hr {

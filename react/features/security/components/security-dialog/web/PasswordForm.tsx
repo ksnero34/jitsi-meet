@@ -10,37 +10,37 @@ import { LOCKED_LOCALLY } from '../../../../room-lock/constants';
  */
 interface IProps extends WithTranslation {
 
-    /**
-     * Whether or not to show the password editing field.
-     */
-    editEnabled: boolean;
+/**
+* Whether or not to show the password editing field.
+*/
+editEnabled: boolean;
 
-    /**
-     * The value for how the conference is locked (or undefined if not locked)
-     * as defined by room-lock constants.
-     */
-    locked?: string;
+/**
+* The value for how the conference is locked (or undefined if not locked)
+* as defined by room-lock constants.
+*/
+locked?: string;
 
-    /**
-     * Callback to invoke when the local participant is submitting a password
-     * set request.
-     */
-    onSubmit: Function;
+/**
+* Callback to invoke when the local participant is submitting a password
+* set request.
+*/
+onSubmit: Function;
 
-    /**
-     * The current known password for the JitsiConference.
-     */
-    password?: string;
+/**
+* The current known password for the JitsiConference.
+*/
+password?: string;
 
-    /**
-     * The number of digits to be used in the password.
-     */
-    passwordNumberOfDigits?: number;
+/**
+* The number of digits to be used in the password.
+*/
+passwordNumberOfDigits?: number;
 
-    /**
-     * Whether or not the password should be visible.
-     */
-    visible: boolean;
+/**
+* Whether or not the password should be visible.
+*/
+visible: boolean;
 }
 
 /**
@@ -48,10 +48,10 @@ interface IProps extends WithTranslation {
  */
 interface IState {
 
-    /**
-     * The value of the password being entered by the local participant.
-     */
-    enteredPassword: string;
+/**
+* The value of the password being entered by the local participant.
+*/
+enteredPassword: string;
 }
 
 /**
@@ -65,14 +65,14 @@ class PasswordForm extends Component<IProps, IState> {
      *
      * @inheritdoc
      */
-    static getDerivedStateFromProps(props: IProps, state: IState) {
-        return {
-            enteredPassword: props.editEnabled ? state.enteredPassword : ''
-        };
-    }
+    // static getDerivedStateFromProps(props: IProps, state: IState) {
+    //     return {
+    //         enteredPassword: props.editEnabled ? state.enteredPassword : ''
+    //     };
+    // }
 
     state = {
-        enteredPassword: ''
+        enteredPassword: this.props.password
     };
 
     /**
@@ -87,6 +87,7 @@ class PasswordForm extends Component<IProps, IState> {
         // Bind event handlers so they are only bound once per instance.
         this._onEnteredPasswordChange = this._onEnteredPasswordChange.bind(this);
         this._onKeyPress = this._onKeyPress.bind(this);
+        this.state.enteredPassword = this.props.password;
     }
 
     /**

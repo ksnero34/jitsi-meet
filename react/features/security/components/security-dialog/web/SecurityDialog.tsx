@@ -14,63 +14,63 @@ import { isEnablingLobbyAllowed } from '../../../../lobby/functions';
 import PasswordSection from './PasswordSection';
 
 export interface INotifyClick {
-    key: string;
-    preventExecution: boolean;
+key: string;
+preventExecution: boolean;
 }
 
 interface IProps {
 
-    /**
-     * Toolbar buttons which have their click exposed through the API.
-     */
-    _buttonsWithNotifyClick: Array<string | INotifyClick>;
+/**
+* Toolbar buttons which have their click exposed through the API.
+*/
+_buttonsWithNotifyClick: Array<string | INotifyClick>;
 
-    /**
-     * Whether or not the current user can modify the current password.
-     */
-    _canEditPassword: boolean;
+/**
+* Whether or not the current user can modify the current password.
+*/
+_canEditPassword: boolean;
 
-    /**
-     * The JitsiConference for which to display a lock state and change the
-     * password.
-     */
-    _conference?: IJitsiConference;
+/**
+* The JitsiConference for which to display a lock state and change the
+* password.
+*/
+_conference?: IJitsiConference;
 
-    /**
-     * Whether to hide the lobby password section.
-     */
-    _disableLobbyPassword?: boolean;
+/**
+* Whether to hide the lobby password section.
+*/
+_disableLobbyPassword?: boolean;
 
-    /**
-     * Whether to hide the lobby section.
-     */
-    _isEnablingLobbyAllowed: boolean;
+/**
+* Whether to hide the lobby section.
+*/
+_isEnablingLobbyAllowed: boolean;
 
-    /**
-     * The value for how the conference is locked (or undefined if not locked)
-     * as defined by room-lock constants.
-     */
-    _locked?: string;
+/**
+* The value for how the conference is locked (or undefined if not locked)
+* as defined by room-lock constants.
+*/
+_locked?: string;
 
-    /**
-     * The current known password for the JitsiConference.
-     */
-    _password?: string;
+/**
+* The current known password for the JitsiConference.
+*/
+_password?: string;
 
-    /**
-     * The number of digits to be used in the password.
-     */
-    _passwordNumberOfDigits?: number;
+/**
+* The number of digits to be used in the password.
+*/
+_passwordNumberOfDigits?: number;
 
-    /**
-     * Indicates whether e2ee will be displayed or not.
-     */
-    _showE2ee: boolean;
+/**
+* Indicates whether e2ee will be displayed or not.
+*/
+_showE2ee: boolean;
 
-    /**
-     * Action that sets the conference password.
-     */
-    setPassword: Function;
+/**
+* Action that sets the conference password.
+*/
+setPassword: Function;
 }
 
 /**
@@ -100,6 +100,8 @@ function SecurityDialog({
 
     return (
         <Dialog
+            //cancelDisabled = { !_locked }
+            //cancelKey = { 'dialog.close' }
             cancel = {{ hidden: true }}
             ok = {{ hidden: true }}
             titleKey = 'security.title'>
@@ -124,12 +126,12 @@ function SecurityDialog({
                         </>
                     )
                 }
-                {
+                {/* {
                     _showE2ee ? <>
                         { (_isEnablingLobbyAllowed || !_disableLobbyPassword) && <div className = 'separator-line' /> }
                         <E2EESection />
                     </> : null
-                }
+                } */}
 
             </div>
         </Dialog>

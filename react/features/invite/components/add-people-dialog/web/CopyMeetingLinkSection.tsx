@@ -42,7 +42,7 @@ function CopyMeetingLinkSection({ url }: IProps) {
                 id = 'add-people-copy-link-button'
                 textOnCopySuccess = { t('addPeople.linkCopied') }
                 textOnHover = { t('addPeople.copyLink') }
-                textToCopy = { url } />
+                textToCopy = { getDecodedURI(url) } />
         </>
     );
 }

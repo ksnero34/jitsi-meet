@@ -180,7 +180,7 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
                     name = 'start-video-muted'
                     onChange = { this._onStartVideoMutedChanged } />
                 <Checkbox
-                    checked = { followMeEnabled && !followMeActive }
+                    checked = { followMeEnabled }
                     className = { classes.checkbox }
                     disabled = { followMeActive }
                     label = { t('settings.followMe') }

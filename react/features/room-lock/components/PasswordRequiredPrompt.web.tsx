@@ -25,6 +25,9 @@ interface IProps extends WithTranslation {
      * The redux store's {@code dispatch} function.
      */
     dispatch: IStore['dispatch'];
+
+    passwordErrorCount: number,
+
 }
 
 /**
@@ -75,6 +78,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
                 disableBackdropClose = { true }
                 onCancel = { this._onCancel }
                 onSubmit = { this._onSubmit }
+                submitDisabled = { this.props.passwordErrorCount >= 5 ? true:false}
                 titleKey = 'dialog.passwordRequired'>
                 { this._renderBody() }
             </Dialog>
@@ -98,7 +102,9 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
                     name = 'lockKey'
                     onChange = { this._onPasswordChanged }
                     type = 'password'
+                    disabled = { this.props.passwordErrorCount >= 5 }
                     value = { this.state.password } />
+                    <p className='description'>오류횟수 : {this.props.passwordErrorCount} { this.props.passwordErrorCount > 2 ? ' (5회 이상 틀리면 재접속이 필요합니다.)' : '' }</p>
             </div>
         );
     }

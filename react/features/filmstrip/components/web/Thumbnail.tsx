@@ -23,7 +23,8 @@ import {
     hasRaisedHand,
     isLocalScreenshareParticipant,
     isScreenShareParticipant,
-    isWhiteboardParticipant
+    isWhiteboardParticipant,
+    isLocalParticipantModerator
 } from '../../../base/participants/functions';
 import { IParticipant } from '../../../base/participants/types';
 import { ASPECT_RATIO_NARROW } from '../../../base/responsive-ui/constants';
@@ -248,6 +249,8 @@ export interface IProps extends WithTranslation {
      * The ID of the participant related to the thumbnail.
      */
     participantID?: string;
+    
+    _isLocalParticipantModerator: Boolean,
 
     /**
      * Styles that will be set to the Thumbnail's main span element.
@@ -746,13 +749,17 @@ class Thumbnail extends Component<IProps, IState> {
      * @returns {void}
      */
     _onClick() {
-        const { _participant, dispatch, _stageFilmstripLayout } = this.props;
+        const { _participant, dispatch, _stageFilmstripLayout, _isLocalParticipantModerator } = this.props;
         const { id, pinned } = _participant;
 
         if (_stageFilmstripLayout) {
             dispatch(togglePinStageParticipant(id));
         } else {
-            dispatch(pinParticipant(pinned ? null : id));
+            if(_isLocalParticipantModerator) {
+                // dispatch(pinParticipant(pinned ? null : id));
+                dispatch(pinParticipant(id));
+            }
+            //dispatch(pinParticipant(pinned ? null : id));
         }
     }
 
@@ -1394,6 +1401,7 @@ function _mapStateToProps(state: IReduxState, ownProps: any): Object {
         _thumbnailType: tileType,
         _videoObjectPosition: getVideoObjectPosition(state, participant?.id),
         _videoTrack,
+        _isLocalParticipantModerator: isLocalParticipantModerator(state),
         ...size,
         _gifSrc: mode === 'chat' ? null : gifSrc
     };

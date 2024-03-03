@@ -16,7 +16,7 @@ import { getAutoPinSetting, updateAutoPinnedParticipant } from './functions';
 import './subscriber';
 
 let previousTileViewEnabled: boolean | undefined;
-
+let previousPinnedParticipant: any;
 /**
  * Middleware which intercepts actions and updates tile view related state.
  *
@@ -67,8 +67,19 @@ MiddlewareRegistry.register(store => next => action => {
         const state = store.getState();
         const stageFilmstrip = isStageFilmstripEnabled(state);
 
-        if (action.enabled && !stageFilmstrip && getPinnedParticipant(state)) {
+        // if (action.enabled && !stageFilmstrip && getPinnedParticipant(state)) {
+        //     store.dispatch(pinParticipant(null));
+        // }
+        if (action.enabled) {
+            if(getPinnedParticipant(store) !== undefined) {
+                previousPinnedParticipant = getPinnedParticipant(store);
+            }
             store.dispatch(pinParticipant(null));
+        }
+        else {
+            if(!getPinnedParticipant(store) && previousPinnedParticipant !== undefined) {
+                store.dispatch(pinParticipant(previousPinnedParticipant.id));
+            }
         }
         break;
     }

@@ -134,6 +134,7 @@
     "@types/amplitude-js": "8.16.2",
     "@types/audioworklet": "0.0.29",
     "@types/dom-screen-wake-lock": "1.0.1",
+    "@types/jquery": "^3.5.29",
     "@types/js-md5": "0.4.3",
     "@types/lodash": "4.14.182",
     "@types/moment-duration-format": "2.2.6",

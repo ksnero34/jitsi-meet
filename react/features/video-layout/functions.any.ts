@@ -2,7 +2,7 @@ import { IReduxState, IStore } from '../app/types';
 import { TILE_VIEW_ENABLED } from '../base/flags/constants';
 import { getFeatureFlag } from '../base/flags/functions';
 import { pinParticipant } from '../base/participants/actions';
-import { getParticipantCount, getPinnedParticipant } from '../base/participants/functions';
+import { getParticipantCount, getPinnedParticipant, isLocalParticipantModerator } from '../base/participants/functions';
 import { FakeParticipant } from '../base/participants/types';
 import { isStageFilmstripAvailable, isTileViewModeDisabled } from '../filmstrip/functions';
 import { isVideoPlaying } from '../shared-video/functions';
@@ -77,6 +77,12 @@ export function shouldDisplayTileView(state: IReduxState) {
     const tileViewEnabledFeatureFlag = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
     const { disableTileView } = state['features/base/config'];
 
+    // 방장이 아니면 타일뷰로 자동 전환하지 않음
+    // const isModerator = isLocalParticipantModerator(state);
+    // if (!isModerator) {
+    //     return false;
+    // }
+
     if (disableTileView || !tileViewEnabledFeatureFlag) {
         return false;
     }
@@ -97,8 +103,8 @@ export function shouldDisplayTileView(state: IReduxState) {
         || getPinnedParticipant(state)
 
         // It's a 1-on-1 meeting
-        || participantCount < 3
-
+        //|| participantCount < 3
+        || true
         // There is a shared YouTube video in the meeting
         || isVideoPlaying(state)
 

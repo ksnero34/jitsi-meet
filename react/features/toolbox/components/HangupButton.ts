@@ -7,7 +7,8 @@ import { leaveConference } from '../../base/conference/actions';
 import { translate } from '../../base/i18n/functions';
 import { IProps as AbstractButtonProps } from '../../base/toolbox/components/AbstractButton';
 import AbstractHangupButton from '../../base/toolbox/components/AbstractHangupButton';
-
+import { openDialog } from '../../base/dialog/actions';
+import { HangupDialog } from '../../hangup';
 /**
  * Component that renders a toolbar button for leaving the current conference.
  *
@@ -43,7 +44,8 @@ class HangupButton extends AbstractHangupButton<AbstractButtonProps> {
      * @returns {void}
      */
     _doHangup() {
-        this._hangup();
+        //this._hangup();
+        this.props.dispatch(openDialog(HangupDialog));
     }
 }
 

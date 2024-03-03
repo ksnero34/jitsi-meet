@@ -58,7 +58,8 @@ class ProfileButton extends AbstractButton<IProps> {
             displayName = _defaultLocalDisplayName;
         }
 
-        return displayName;
+        // return displayName;
+        return "내 설정";
     }
 
     /**
@@ -67,7 +68,8 @@ class ProfileButton extends AbstractButton<IProps> {
      * @returns {string}
      */
     _getTooltip() {
-        return this._getLabel();
+        // return this.label;
+        return "내 설정";
     }
 
     /**

@@ -11,6 +11,7 @@ import AbstractButton, { IProps as AbstractButtonProps } from '../../base/toolbo
 import { setOverflowMenuVisible } from '../../toolbox/actions';
 import { setTileView } from '../actions';
 import { shouldDisplayTileView } from '../functions';
+import { isLocalParticipantModerator } from '../../base/participants/functions';
 import logger from '../logger';
 
 /**
@@ -84,7 +85,10 @@ class TileViewButton<P extends IProps> extends AbstractButton<P> {
  * @returns {IProps}
  */
 function _mapStateToProps(state: IReduxState, ownProps: any) {
-    const enabled = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
+    //const enabled = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
+    let enabled = getFeatureFlag(state, TILE_VIEW_ENABLED, true);
+    const isModerator = isLocalParticipantModerator(state);
+    if(!isModerator) enabled = false;
     const { visible = enabled } = ownProps;
 
     return {

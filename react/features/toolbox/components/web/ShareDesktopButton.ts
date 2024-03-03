@@ -11,6 +11,7 @@ import { startScreenShareFlow } from '../../../screen-share/actions.web';
 import { isScreenVideoShared } from '../../../screen-share/functions';
 import { closeOverflowMenuIfOpen } from '../../actions.web';
 import { isDesktopShareButtonDisabled } from '../../functions';
+import { isLocalParticipantModerator } from '../../../base/participants/functions';
 
 interface IProps extends AbstractButtonProps {
 
@@ -23,6 +24,9 @@ interface IProps extends AbstractButtonProps {
      * Whether or not the local participant is screensharing.
      */
     _screensharing: boolean;
+
+    _isLocalParticipantModerator: boolean,
+    
 }
 
 /**
@@ -41,9 +45,9 @@ class ShareDesktopButton extends AbstractButton<IProps> {
      * @returns {string}
      */
     _getTooltip() {
-        const { _desktopSharingEnabled, _screensharing } = this.props;
+        const { _desktopSharingEnabled, _screensharing,_isLocalParticipantModerator } = this.props;
 
-        if (_desktopSharingEnabled) {
+        if (_desktopSharingEnabled&& _isLocalParticipantModerator) {
             if (_screensharing) {
                 return 'toolbar.stopScreenSharing';
             }
@@ -104,12 +108,13 @@ const mapStateToProps = (state: IReduxState) => {
     // Disable the screenshare button if the video sender limit is reached and there is no video or media share in
     // progress.
     const desktopSharingEnabled
-        = JitsiMeetJS.isDesktopSharingEnabled() && !isDesktopShareButtonDisabled(state);
+        = JitsiMeetJS.isDesktopSharingEnabled() && !isDesktopShareButtonDisabled(state)&& isLocalParticipantModerator(state);
 
     return {
         _desktopSharingEnabled: desktopSharingEnabled,
         _screensharing: isScreenVideoShared(state),
-        visible: JitsiMeetJS.isDesktopSharingEnabled()
+        visible: JitsiMeetJS.isDesktopSharingEnabled(),
+        _isLocalParticipantModerator: isLocalParticipantModerator(state)
     };
 };
 

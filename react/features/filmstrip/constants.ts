@@ -13,7 +13,8 @@ export const FILMSTRIP_SIZE = SMALL_THUMBNAIL_SIZE + BoxModel.margin;
 /**
  * The aspect ratio of a tile in tile view.
  */
-export const TILE_ASPECT_RATIO = 16 / 9;
+//export const TILE_ASPECT_RATIO = 16 / 9;
+export const TILE_ASPECT_RATIO = 4 / 3;
 
 /**
  * The aspect ratio of a square tile in tile view.

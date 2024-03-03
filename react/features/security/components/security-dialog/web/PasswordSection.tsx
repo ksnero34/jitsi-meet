@@ -15,52 +15,52 @@ const KEY = 'add-passcode';
 
 interface IProps extends WithTranslation {
 
-    /**
-     * Toolbar buttons which have their click exposed through the API.
-     */
-    buttonsWithNotifyClick: Array<string | INotifyClick>;
+/**
+* Toolbar buttons which have their click exposed through the API.
+*/
+buttonsWithNotifyClick: Array<string | INotifyClick>;
 
-    /**
-     * Whether or not the current user can modify the current password.
-     */
-    canEditPassword: boolean;
+/**
+* Whether or not the current user can modify the current password.
+*/
+canEditPassword: boolean;
 
-    /**
-     * The JitsiConference for which to display a lock state and change the
-     * password.
-     */
-    conference: any;
+/**
+* The JitsiConference for which to display a lock state and change the
+* password.
+*/
+conference: any;
 
-    /**
-     * The value for how the conference is locked (or undefined if not locked)
-     * as defined by room-lock constants.
-     */
-    locked?: string;
+/**
+* The value for how the conference is locked (or undefined if not locked)
+* as defined by room-lock constants.
+*/
+locked?: string;
 
-    /**
-     * The current known password for the JitsiConference.
-     */
-    password?: string;
+/**
+* The current known password for the JitsiConference.
+*/
+password?: string;
 
-    /**
-     * Whether or not to show the password in editing mode.
-     */
-    passwordEditEnabled: boolean;
+/**
+* Whether or not to show the password in editing mode.
+*/
+passwordEditEnabled: boolean;
 
-    /**
-     * The number of digits to be used in the password.
-     */
-    passwordNumberOfDigits?: number;
+/**
+* The number of digits to be used in the password.
+*/
+passwordNumberOfDigits?: number;
 
-    /**
-     * Action that sets the conference password.
-     */
-    setPassword: Function;
+/**
+* Action that sets the conference password.
+*/
+setPassword: Function;
 
-    /**
-     * Method that sets whether the password editing is enabled or not.
-     */
-    setPasswordEditEnabled: Function;
+/**
+* Method that sets whether the password editing is enabled or not.
+*/
+setPasswordEditEnabled: Function;
 }
 
 /**
@@ -145,7 +145,12 @@ function PasswordSection({
             const { value } = formRef.current.querySelector('div > input');
 
             if (value) {
-                onPasswordSubmit(value);
+                if(value === password) {
+                    onTogglePasswordEditState();
+                }
+                else {
+                    onPasswordSubmit(value);
+                }
             }
         }
     }
@@ -197,35 +202,35 @@ function PasswordSection({
             return null;
         }
 
-        if (passwordEditEnabled) {
-            return (
-                <>
-                    <button
-                        className = 'as-link'
-                        onClick = { onTogglePasswordEditState }
-                        type = 'button'>
-                        { t('dialog.Cancel') }
-                        <span className = 'sr-only'>({ t('dialog.password') })</span>
-                    </button>
-                    <button
-                        className = 'as-link'
-                        onClick = { onPasswordSave }
-                        type = 'button'>
-                        { t('dialog.add') }
-                        <span className = 'sr-only'>({ t('dialog.password') })</span>
-                    </button>
-                </>
-            );
-        }
+        // if (passwordEditEnabled) {
+        //     return (
+        //         <>
+        //             <button
+        //                 className = 'as-link'
+        //                 onClick = { onTogglePasswordEditState }
+        //                 type = 'button'>
+        //                 { t('dialog.Cancel') }
+        //                 <span className = 'sr-only'>({ t('dialog.password') })</span>
+        //             </button>
+        //             <button
+        //                 className = 'as-link'
+        //                 onClick = { onPasswordSave }
+        //                 type = 'button'>
+        //                 { t('dialog.add') }
+        //                 <span className = 'sr-only'>({ t('dialog.password') })</span>
+        //             </button>
+        //         </>
+        //     );
+        // }
 
-        if (locked) {
+        if (locked && !passwordEditEnabled) {
             return (
                 <>
                     <button
                         className = 'remove-password as-link'
-                        onClick = { onPasswordRemove }
+                        onClick = { onTogglePasswordEditState }
                         type = 'button'>
-                        { t('dialog.Remove') }
+                        { t('dialog.Modify') }
                         <span className = 'sr-only'>({ t('dialog.password') })</span>
                     </button>
                     {
@@ -253,13 +258,26 @@ function PasswordSection({
                 </>
             );
         }
+        else {
+            setPasswordEditEnabled(true);
+            // return (
+            //     <button
+            //         onClick = { onPasswordSave }
+            //         type = 'button'>
+            //         { t('dialog.Set') }
+            //         <span className = 'sr-only'>({ t('dialog.password') })</span>
+            //     </button>
+            // );
+        
 
-        return (
-            <button
-                className = 'add-password as-link'
-                onClick = { onTogglePasswordEditState }
-                type = 'button'>{ t('info.addPassword') }</button>
-        );
+            return (
+                <button
+                    className = 'add-password as-link'
+                    //onClick = { onTogglePasswordEditState }
+                    onClick= {onPasswordSave}
+                    type = 'button'>{ t('info.addPassword') }</button>
+            );
+        }
     }
 
     return (

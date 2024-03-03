@@ -108,7 +108,8 @@ import {
     participantSourcesUpdated,
     participantUpdated,
     screenshareParticipantDisplayNameChanged,
-    updateRemoteParticipantFeatures
+    updateRemoteParticipantFeatures,
+    getParticipantCount
 } from './react/features/base/participants/actions';
 import {
     getLocalParticipant,
@@ -134,6 +135,7 @@ import {
     isUserInteractionRequiredForUnmute
 } from './react/features/base/tracks/functions';
 import { downloadJSON } from './react/features/base/util/downloadJSON';
+import { safeDecodeURIComponent } from './react/features/base/util/uri';
 import { openLeaveReasonDialog } from './react/features/conference/actions.web';
 import { showDesktopPicker } from './react/features/desktop-picker/actions';
 import { appendSuffix } from './react/features/display-name/functions';
@@ -166,6 +168,7 @@ import { endpointMessageReceived } from './react/features/subtitles/actions.any'
 import { handleToggleVideoMuted } from './react/features/toolbox/actions.any';
 import { muteLocal } from './react/features/video-menu/actions.any';
 import { iAmVisitor } from './react/features/visitors/functions';
+import { authenticateAccount } from './react/features/security/actions';
 import UIEvents from './service/UI/UIEvents';
 
 const logger = Logger.getLogger(__filename);
@@ -174,6 +177,7 @@ const eventEmitter = new EventEmitter();
 
 let room;
 
+let stfNo;
 /*
  * Logic to open a desktop picker put on the window global for
  * lib-jitsi-meet to detect and invoke
@@ -1684,7 +1688,10 @@ export default {
         room.on(JitsiConferenceEvents.USER_ROLE_CHANGED, (id, role) => {
             if (this.isLocalId(id)) {
                 logger.info(`My role changed, new role: ${role}`);
-
+                this._writeLog("Role Changed");
+                if(role === "moderator" && room.getParticipantCount() === 1) {
+                    APP.store.dispatch(authenticateAccount());
+                }
                 if (role === 'moderator') {
                     APP.store.dispatch(maybeSetLobbyChatMessageListener());
                 }
@@ -2118,7 +2125,30 @@ export default {
                 this.deviceChangeListener);
         }
     },
+    async _writeLog(msg) {
 
+        const localParticipant = getLocalParticipant(APP.store.getState());
+        return true;
+        const response = await fetch("/api/v1/log/audit", {
+            method: "PUT",
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+                roomName: safeDecodeURIComponent(APP.conference.roomName),
+                nickname: localParticipant.name,
+                role: localParticipant.role,
+                logTitle: msg
+            })
+        });
+        const status = response.status;
+        if(status === 200) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    },
     /**
      * Callback invoked when the conference has been successfully joined.
      * Initializes the UI and various other features.

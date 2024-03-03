@@ -856,6 +856,7 @@ export function setPassword(
             const state = getState()['features/base/conference'];
 
             if (state.conference === conference) {
+                APP.conference._writeLog('Set Password');
                 return (
                     method.call(conference, password)
                         .then(() => dispatch({

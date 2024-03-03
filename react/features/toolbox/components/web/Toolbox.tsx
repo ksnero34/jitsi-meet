@@ -3,6 +3,8 @@ import { WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
 
+import Checkbox from '../../../base/ui/components/web/Checkbox';
+
 import { IReduxState, IStore } from '../../../app/types';
 import { NotifyClickButton } from '../../../base/config/configType';
 import { VISITORS_MODE_BUTTONS } from '../../../base/config/constants';
@@ -22,7 +24,8 @@ import {
     setHangupMenuVisible,
     setOverflowMenuVisible,
     setToolbarHovered,
-    showToolbox
+    showToolbox,
+    dockToolbox
 } from '../../actions.web';
 import { NOT_APPLICABLE, THRESHOLDS } from '../../constants';
 import {
@@ -129,6 +132,9 @@ interface IProps extends WithTranslation {
      * The enabled buttons.
      */
     _toolbarButtons: Array<string>;
+
+    _isLocalParticipantModerator: boolean;
+
 
     /**
      * Flag showing whether toolbar is visible.
@@ -378,7 +384,17 @@ const Toolbox = ({
                         onMouseOut,
                         onMouseOver
                     }) }>
-
+                    { (<Checkbox
+                    //checked = {true}
+                    //size = 'large'
+                    label = { '제어 버튼 숨기기' }
+                    name = 'dock-toolbox'
+                    // eslint-disable-next-line react/jsx-no-bind
+                    onChange = {
+                        ({ target: { checked } }) =>
+                            //super._onChange({ followMeEnabled: checked })
+                            dispatch(dockToolbox(!checked))
+                    } /> )}
                     <div
                         className = 'toolbox-content-items'
                         ref = { _toolboxRef }>
@@ -465,7 +481,7 @@ const Toolbox = ({
         return null;
     }
 
-    const rootClassNames = `new-toolbox ${_visible ? 'visible' : ''} ${
+    const rootClassNames = `new-toolbox ${!$('input[name="dock-toolbox"]').prop('checked') ? 'visible' : ''} ${
         _toolbarButtons.length ? '' : 'no-buttons'} ${_chatOpen ? 'shift-right' : ''}`;
 
     return (
@@ -526,7 +542,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         _shiftUp: state['features/toolbox'].shiftUp,
         _shouldDisplayReactionsButtons: shouldDisplayReactionsButtons(state),
         _toolbarButtons: toolbarButtons,
-        _visible: isToolboxVisible(state)
+        _visible: isToolboxVisible(state),
+        _isLocalParticipantModerator: isLocalParticipantModerator(state)
     };
 }
 

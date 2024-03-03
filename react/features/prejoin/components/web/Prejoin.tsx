@@ -391,7 +391,7 @@ const Prejoin = ({
         <PreMeetingScreen
             showDeviceStatus = { deviceStatusVisible }
             showUnsafeRoomWarning = { showUnsafeRoomWarning }
-            title = { t('prejoin.joinMeeting') }
+            title = { t('prejoin.premeeting') }
             videoMuted = { !showCameraPreview }
             videoTrack = { videoTrack }>
             <div
