@@ -14,6 +14,7 @@ import { shouldDisplayTileView } from '../functions';
 import { isLocalParticipantModerator } from '../../base/participants/functions';
 import logger from '../logger';
 
+//import * as tilesort from "./tileVeiwSort";
 /**
  * The type of the React {@code Component} props of {@link TileViewButton}.
  */
@@ -60,6 +61,7 @@ class TileViewButton<P extends IProps> extends AbstractButton<P> {
         batch(() => {
             dispatch(setTileView(value));
             navigator.product !== 'ReactNative' && dispatch(setOverflowMenuVisible(false));
+            //tilesort.sort();
         });
 
     }

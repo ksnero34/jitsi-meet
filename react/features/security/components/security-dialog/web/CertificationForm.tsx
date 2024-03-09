@@ -15,7 +15,7 @@ type Props = {
 //     enteredCertificationCode: string
 // };
 
-function CertificationForm(props) {
+function CertificationForm(props:any) {
     const status = props.status;
     const setStatus = props.setStatus;
     const onSubmit = props.onSubmit;
@@ -29,15 +29,15 @@ function CertificationForm(props) {
         
         const countdown = setInterval(() => {
             if(status === "sendCode" || status === "notVerified") {
-                if (parseInt(seconds) > 0) {
-                    setSeconds(parseInt(seconds) - 1);
+                if (seconds > 0) {
+                    setSeconds(seconds - 1);
                 }
-                if (parseInt(seconds) === 0) {
-                    if (parseInt(minutes) === 0) {
+                if (seconds === 0) {
+                    if (minutes === 0) {
                         setStatus("timeout");
                         clearInterval(countdown);
                     } else {
-                        setMinutes(parseInt(minutes) - 1);
+                        setMinutes(minutes - 1);
                         setSeconds(59);
                     }
                 }
@@ -62,18 +62,18 @@ function CertificationForm(props) {
         }
     }
 
-    function _onEnteredCertificaionCodeChange(event) {
+    function _onEnteredCertificaionCodeChange(event:any) {
         enteredCertificationCode = event.target.value;
     }
 
-    function _onCertificationCodeSubmit(event) {
+    function _onCertificationCodeSubmit(event:any) {
         event.preventDefault();
         event.stopPropagation();
 
         onSubmit(enteredCertificationCode);
     }
 
-    function _onKeyDown(event) {
+    function _onKeyDown(event:any) {
         if (event.key === 'Enter') {
             event.stopPropagation();
         }

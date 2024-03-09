@@ -110,7 +110,7 @@ function _onSubmit() {
  * @private
  * @returns {Props}
  */
-function mapStateToProps(state) {
+function mapStateToProps(state:any) {
     const {
         conference,
         e2eeSupported,

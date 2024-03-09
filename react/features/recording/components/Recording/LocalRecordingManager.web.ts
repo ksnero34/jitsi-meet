@@ -8,6 +8,7 @@ import { MEDIA_TYPE } from '../../../base/media/constants';
 import { getLocalTrack, getTrackState } from '../../../base/tracks/functions';
 import { inIframe } from '../../../base/util/iframeUtils';
 import { stopLocalVideoRecording } from '../../actions.any';
+import { getParticipantById, isParticipantModerator } from '../../../base/participants/functions';
 
 interface ISelfRecording {
     on: boolean;
@@ -177,7 +178,11 @@ const LocalRecordingManager: ILocalRecordingManager = {
      */
     async startLocalRecording(store, onlySelf) {
         const { dispatch, getState } = store;
-
+        var localId:any = getState()['features/base/participants'].local?.id.toString();
+        if(!isParticipantModerator(getParticipantById(getState(),localId)))
+        {
+            throw new Error('NoModerator');
+        }
         // @ts-ignore
         const supportsCaptureHandle = Boolean(navigator.mediaDevices.setCaptureHandleConfig) && !inIframe();
         const tabId = uuidV4();

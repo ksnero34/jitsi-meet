@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
  *
  * @returns {React$Element<any>}
  */
-function CertificationDialog(props) {
+function CertificationDialog(props:any) {
     // 상태정보 : locked, getCode, verified, notVerified
     const [ status, setStatus ] = useState("locked");
     //const [ certificationCodeEditEnabled, setCertificationCodeEditEnabled ] = useState(false);

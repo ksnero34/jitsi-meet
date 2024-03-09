@@ -19,7 +19,7 @@ export function authenticateAccount() {
     };
 }
 
-export function setAccountInfo(accountInfo: Object) {
+export function setAccountInfo(accountInfo: any) {
     return {
         type: SET_ACCOUNT_INFO,
         stfNo: accountInfo?.stfNo,
@@ -35,7 +35,7 @@ export function toggleSecurityDialog() {
 
 
 export function CloseCertificationAndOpenSecurityDialog() {
-    return function(dispatch: (Object) => Object) {
+    return function(dispatch: (arg0: Object) => Object) {
         dispatch(hideDialog(CertificationDialog));
         setTimeout(() => {
             dispatch(toggleDialog(SecurityDialog));
@@ -44,13 +44,13 @@ export function CloseCertificationAndOpenSecurityDialog() {
 }
 
 export function toggleCookieDialog() {
-    return function(dispatch: (Object) => Object) {
+    return function(dispatch: (arg0: Object) => Object) {
         dispatch(toggleDialog(CookieDialog));
     };
 }
 
 export function toggleCertificationDialog() {
-    return function(dispatch: (Object) => Object) {
+    return function(dispatch: (arg0: Object) => Object) {
         dispatch(toggleDialog(CertificationDialog));
     };
 }

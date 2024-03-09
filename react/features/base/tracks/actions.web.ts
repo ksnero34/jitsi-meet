@@ -7,7 +7,7 @@ import { setNoiseSuppressionEnabled } from '../../noise-suppression/actions';
 import { showNotification } from '../../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../../notifications/constants';
 import { stopReceiver } from '../../remote-control/actions';
-import { setScreenAudioShareState, setScreenshareAudioTrack } from '../../screen-share/actions';
+import { setScreenAudioShareState, setScreenshareAudioTrack } from '../../screen-share/actions.web';
 import { isAudioOnlySharing, isScreenVideoShared } from '../../screen-share/functions';
 import { toggleScreenshotCaptureSummary } from '../../screenshot-capture/actions';
 import { isScreenshotCaptureEnabled } from '../../screenshot-capture/functions';

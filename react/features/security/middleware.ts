@@ -62,13 +62,13 @@ import { setRandomPassword, authenticateAccount } from './functions';
                     // APP.conference._writeLog('Invalid Cookie');
                     // dispatch(toggleCookieDialog());
                     //200
-                    // APP.conference.stfNo = '8094310';
-                    // APP.conference._writeLog('Valid Cookie');
-                    // dispatch(toggleSecurityDialog());
-                    //401
                     APP.conference.stfNo = '8094310';
-                    APP.conference._writeLog('Locked');
-                    dispatch(toggleCertificationDialog());
+                    APP.conference._writeLog('Valid Cookie');
+                    dispatch(toggleSecurityDialog());
+                    //401
+                    // APP.conference.stfNo = '8094310';
+                    // APP.conference._writeLog('Locked');
+                    // dispatch(toggleCertificationDialog());
                 }
             }
             return result;

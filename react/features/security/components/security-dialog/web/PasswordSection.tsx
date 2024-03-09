@@ -163,7 +163,10 @@ function PasswordSection({
     function onPasswordRemove() {
         onPasswordSubmit('');
     }
-
+    function onPasswordEdit(){
+        onPasswordSubmit('');
+        onTogglePasswordEditState();
+    }
     /**
      * Copies the password to the clipboard.
      *
@@ -202,33 +205,33 @@ function PasswordSection({
             return null;
         }
 
-        // if (passwordEditEnabled) {
-        //     return (
-        //         <>
-        //             <button
-        //                 className = 'as-link'
-        //                 onClick = { onTogglePasswordEditState }
-        //                 type = 'button'>
-        //                 { t('dialog.Cancel') }
-        //                 <span className = 'sr-only'>({ t('dialog.password') })</span>
-        //             </button>
-        //             <button
-        //                 className = 'as-link'
-        //                 onClick = { onPasswordSave }
-        //                 type = 'button'>
-        //                 { t('dialog.add') }
-        //                 <span className = 'sr-only'>({ t('dialog.password') })</span>
-        //             </button>
-        //         </>
-        //     );
-        // }
+        if (passwordEditEnabled) {
+            return (
+                <>
+                    {/* <button
+                        className = 'as-link'
+                        onClick = { onTogglePasswordEditState }
+                        type = 'button'>
+                        { t('dialog.Cancel') }
+                        <span className = 'sr-only'>({ t('dialog.password') })</span>
+                    </button> */}
+                    <button
+                        className = 'as-link'
+                        onClick = { onPasswordSave }
+                        type = 'button'>
+                        { t('dialog.Set') }
+                        <span className = 'sr-only'>({ t('dialog.password') })</span>
+                    </button>
+                </>
+            );
+        }
 
         if (locked && !passwordEditEnabled) {
             return (
                 <>
                     <button
                         className = 'remove-password as-link'
-                        onClick = { onTogglePasswordEditState }
+                        onClick = { onPasswordEdit }
                         type = 'button'>
                         { t('dialog.Modify') }
                         <span className = 'sr-only'>({ t('dialog.password') })</span>
@@ -259,7 +262,7 @@ function PasswordSection({
             );
         }
         else {
-            setPasswordEditEnabled(true);
+            //setPasswordEditEnabled(true);
             // return (
             //     <button
             //         onClick = { onPasswordSave }
@@ -268,15 +271,23 @@ function PasswordSection({
             //         <span className = 'sr-only'>({ t('dialog.password') })</span>
             //     </button>
             // );
-        
-
             return (
                 <button
-                    className = 'add-password as-link'
-                    //onClick = { onTogglePasswordEditState }
-                    onClick= {onPasswordSave}
-                    type = 'button'>{ t('info.addPassword') }</button>
+                    onClick = { onTogglePasswordEditState }
+                    type = 'button'>
+                    { t('dialog.Set') }
+                    <span className = 'sr-only'>({ t('dialog.password') })</span>
+                </button>
             );
+        
+
+            // return (
+            //     <button
+            //         className = 'add-password as-link'
+            //         //onClick = { onTogglePasswordEditState }
+            //         onClick= {onPasswordSave}
+            //         type = 'button'>{ t('info.addPassword') }</button>
+            // );
         }
     }
 

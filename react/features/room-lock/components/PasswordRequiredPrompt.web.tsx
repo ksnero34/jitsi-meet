@@ -78,7 +78,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
                 disableBackdropClose = { true }
                 onCancel = { this._onCancel }
                 onSubmit = { this._onSubmit }
-                submitDisabled = { this.props.passwordErrorCount >= 5 ? true:false}
+                //submitDisabled = { this.props.passwordErrorCount >= 5 ? true:false}
                 titleKey = 'dialog.passwordRequired'>
                 { this._renderBody() }
             </Dialog>

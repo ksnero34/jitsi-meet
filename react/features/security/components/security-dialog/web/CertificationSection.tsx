@@ -13,7 +13,7 @@ type Props = {
     //certificationCodeEditEnabled: boolean,
     //setCertificationCodeEditEnabled: Function,
     getCertificationCode: Function,
-    verifyCertificationCode: Function
+    verifyCertificationCode: Function,
 };
 
 /**
@@ -27,7 +27,7 @@ type Props = {
 //     getCertificationCode,
 //     verifyCertificationCode }: Props) {
 
-function CertificationSection(props) {
+function CertificationSection(props:any) {
     const status = props.status;
     const setStatus = props.setStatus;
     const createAndSendCertificationCode = props.createAndSendCertificationCode;
@@ -49,7 +49,7 @@ function CertificationSection(props) {
 
     async function _verifyCertificationCode() {
         if (formRef.current) {
-            const { value } = formRef.current.querySelector('form > input');
+            const value = formRef.current.querySelector('form > input');
             if(await verifyCertificationCode(value)) {
                 // 인증 성공
                 setStatus("verified");

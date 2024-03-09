@@ -85,7 +85,7 @@ export interface IInputProps {
     /**
      * The value of the input.
      */
-    value: string | number;
+    value: string | number | undefined;
 }
 
 export interface ISwitchProps {

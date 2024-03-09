@@ -29,7 +29,7 @@ ReducerRegistry.register('features/security',
         switch (action.type) {
             case SET_ACCOUNT_INFO:
                 return {
-                    ...state,
+                    state,
                     stfNo: action.stfNo,
                     status: action.status
                 };

@@ -11,8 +11,8 @@ import {
     getPinnedParticipant,
     getVirtualScreenshareParticipantByOwnerId
 } from '../base/participants/functions';
-import { toggleScreensharing } from '../base/tracks/actions';
-import { getLocalDesktopTrack } from '../base/tracks/functions';
+import { toggleScreensharing } from '../base/tracks/actions.web';
+import { getLocalDesktopTrack } from '../base/tracks/functions.web';
 import { showNotification } from '../notifications/actions';
 import { NOTIFICATION_TIMEOUT_TYPE } from '../notifications/constants';
 import { isScreenVideoShared } from '../screen-share/functions';
@@ -716,8 +716,10 @@ export function resume() {
 
             return false;
         };
-        $(window).keydown((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keydown, event)));
-        $(window).keyup((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keyup, event)));
+        // $(window).keydown((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keydown, event)));
+        // $(window).keyup((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keyup, event)));
+        area.keydown((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keydown, event)));
+        area.keyup((event: React.KeyboardEvent) => dispatch(keyPressed(EVENTS.keyup, event)));
 
         dispatch({
             type: CAPTURE_EVENTS,

@@ -394,7 +394,8 @@ const Toolbox = ({
                         ({ target: { checked } }) =>
                             //super._onChange({ followMeEnabled: checked })
                             dispatch(dockToolbox(!checked))
-                    } /> )}
+                    } /> 
+                    )}
                     <div
                         className = 'toolbox-content-items'
                         ref = { _toolboxRef }>

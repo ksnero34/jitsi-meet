@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { shouldComponentUpdate } from 'react-window';
 
 import { IReduxState } from '../../../app/types';
-import { getLocalParticipant } from '../../../base/participants/functions';
+import { getLocalParticipant,getParticipantById, getParticipantDisplayName, isParticipantModerator, isScreenShareParticipant, isWhiteboardParticipant } from '../../../base/participants/functions';
 import { getHideSelfView } from '../../../base/settings/functions.any';
 import { LAYOUTS } from '../../../video-layout/constants';
 import { getCurrentLayout } from '../../../video-layout/functions.web';
@@ -11,6 +11,7 @@ import { FILMSTRIP_TYPE, TILE_ASPECT_RATIO, TILE_HORIZONTAL_MARGIN } from '../..
 import { getActiveParticipantsIds, showGridInVerticalView } from '../../functions.web';
 
 import Thumbnail from './Thumbnail';
+import { isParticipantVideoMuted } from '../../../base/tracks/functions.any';
 
 /**
  * The type of the React {@code Component} props of {@link ThumbnailWrapper}.
@@ -163,6 +164,39 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
     const remoteParticipantsLength = remoteParticipants.length;
     const localId = getLocalParticipant(state)?.id;
 
+    //참석자 정렬 기능 추가(본인외)
+    var beforeSortIds = remoteParticipants;
+    var beforeSortNames:any[][] = [];
+    // 이름 , id , 방장여부, 공유화면여부, 화이트보드여부, 비디오 온여부
+    // 이름 , id , 정렬우선순위 (방장,방장공유화면,화이트보드, 비디오)
+    // 화면공유는 방장만 가능
+    for(var sortIdx =0;sortIdx<beforeSortIds.length;sortIdx++) {
+        var orderRate = 0;
+        if(isParticipantModerator(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 1;
+        else if (isScreenShareParticipant(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 2;
+        else if (isWhiteboardParticipant(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 3;
+        else if (!isParticipantVideoMuted(getParticipantById(state,beforeSortIds[sortIdx]),state)) orderRate = 4;
+        else orderRate = 5;
+
+        beforeSortNames.push([getParticipantDisplayName(state,beforeSortIds[sortIdx]),beforeSortIds[sortIdx],orderRate]); 
+    }
+    //console.log("정렬전=========="+beforeSortNames);
+    beforeSortNames.sort(function(a,b){
+        // 방장,화이트보드,화면공유, 비디오는 우선정렬
+        if(a[2] < b[2]) return -1;
+        if(a[2] > b[2]) return 1;
+       
+        // 나머진 이름으로 내림차순
+        if (a[0] < b[0]) return -1;
+        if (a[0] > b[0]) return 1;
+        return 0;
+    });
+    //console.log(beforeSortNames);
+    var afterSortedIds:string[] = [];
+    for(var sortIdx =0;sortIdx<beforeSortIds.length;sortIdx++){
+        afterSortedIds.push(beforeSortNames[sortIdx][1]);
+    }
+
     if (_currentLayout === LAYOUTS.TILE_VIEW || _verticalViewGrid || stageFilmstrip) {
         const { columnIndex, rowIndex } = ownProps;
         const { tileViewDimensions, stageFilmstripDimensions, verticalViewDimensions } = state['features/filmstrip'];
@@ -229,11 +263,14 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
             return {};
         }
 
+        
+
         if (stageFilmstrip) {
             return {
                 _disableSelfView: disableSelfView,
                 _filmstripType: filmstripType,
-                _participantID: remoteParticipants[index] === localId ? 'local' : remoteParticipants[index],
+                //_participantID: remoteParticipants[index] === localId ? 'local' : remoteParticipants[index],
+                _participantID: afterSortedIds[index] === localId ? 'local' : afterSortedIds[index],
                 _horizontalOffset: horizontalOffset,
                 _thumbnailWidth: thumbnailWidth
             };
@@ -271,7 +308,8 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
 
         return {
             _filmstripType: filmstripType,
-            _participantID: remoteParticipants[remoteIndex],
+            // _participantID: remoteParticipants[remoteIndex],
+            _participantID: afterSortedIds[remoteIndex],
             _horizontalOffset: horizontalOffset,
             _thumbnailWidth: thumbnailWidth
         };
@@ -299,7 +337,8 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
     }
 
     return {
-        _participantID: remoteParticipants[index]
+        // _participantID: remoteParticipants[index]
+        _participantID: afterSortedIds[index]
     };
 }
 

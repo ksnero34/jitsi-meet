@@ -30,7 +30,7 @@ onSubmit: Function;
 /**
 * The current known password for the JitsiConference.
 */
-password?: string;
+password?: string | undefined;
 
 /**
 * The number of digits to be used in the password.
@@ -51,7 +51,7 @@ interface IState {
 /**
 * The value of the password being entered by the local participant.
 */
-enteredPassword: string;
+enteredPassword: string | undefined;
 }
 
 /**
@@ -60,16 +60,18 @@ enteredPassword: string;
  * @augments Component
  */
 class PasswordForm extends Component<IProps, IState> {
+    static props: IProps;
     /**
      * Implements React's {@link Component#getDerivedStateFromProps()}.
      *
      * @inheritdoc
      */
-    // static getDerivedStateFromProps(props: IProps, state: IState) {
-    //     return {
-    //         enteredPassword: props.editEnabled ? state.enteredPassword : ''
-    //     };
-    // }
+    static getDerivedStateFromProps(props: IProps, state: IState) {
+        return {
+            //enteredPassword: props.editEnabled ? state.enteredPassword : ''
+            enteredPassword: props.password
+        };
+    }
 
     state = {
         enteredPassword: this.props.password

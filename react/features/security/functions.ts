@@ -2,7 +2,7 @@
 
 import { setPassword } from '../base/conference/actions';
 
-export function setRandomPassword(conference, dispatch, stateful) {
+export function setRandomPassword(conference:any, dispatch:any, stateful:any) {
     dispatch(setPassword(conference, conference.lock, Math.random().toString(36).substr(2,8)));
 }
 
@@ -104,8 +104,8 @@ export async function createAndSendCertificationCode() {
     }
 }
 
-export async function verifyCertificationCode(code) {
-    const response = await fetch("/api/v1/authentication/certification?stfNo=" + APP.conference.stfNo + "&code=" + code, {
+export async function verifyCertificationCode(code:any) {
+    const response = await fetch("/api/v1/authentication/certification?stfNo=" + APP.conference.stfNo + "&code=" + code.value, {
         method: "PUT",
         headers: {
           'Content-type': 'application/json'

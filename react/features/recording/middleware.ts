@@ -143,6 +143,8 @@ MiddlewareRegistry.register(({ dispatch, getState }) => next => async action => 
                 descriptionKey = 'recording.noStreams';
             } else if (err.message === 'NoMicTrack') {
                 descriptionKey = 'recording.noMicPermission';
+            } else if (err.message === 'NoModerator') {
+                descriptionKey = '녹화는 방장만 가능합니다';
             }
             const props = {
                 descriptionKey,
