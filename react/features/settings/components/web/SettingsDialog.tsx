@@ -255,7 +255,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
                     followMeEnabled: tabState?.followMeEnabled,
                     startAudioMuted: tabState?.startAudioMuted,
                     startVideoMuted: tabState?.startVideoMuted,
-                    startReactionsMuted: tabState?.startReactionsMuted
+                    startReactionsMuted: tabState?.startReactionsMuted,
+                    currentSortingOrder: tabState?.currentSortingOrder,
                 };
             },
             submit: submitModeratorTab,

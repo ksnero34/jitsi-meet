@@ -12,6 +12,7 @@ import { getActiveParticipantsIds, showGridInVerticalView } from '../../function
 
 import Thumbnail from './Thumbnail';
 import { isParticipantVideoMuted } from '../../../base/tracks/functions.any';
+import { getModeratorTabProps } from '../../../settings/functions.web';
 
 /**
  * The type of the React {@code Component} props of {@link ThumbnailWrapper}.
@@ -163,7 +164,8 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
     const remoteParticipants = stageFilmstrip ? sortedActiveParticipants : remote;
     const remoteParticipantsLength = remoteParticipants.length;
     const localId = getLocalParticipant(state)?.id;
-
+    //설정의 방장탭에서 설정된 정렬기준
+    const currentSortingOrder = getModeratorTabProps(state).currentSortingOrder;
     //참석자 정렬 기능 추가(본인외)
     var beforeSortIds = remoteParticipants;
     var beforeSortNames:any[][] = [];
@@ -181,15 +183,23 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
         beforeSortNames.push([getParticipantDisplayName(state,beforeSortIds[sortIdx]),beforeSortIds[sortIdx],orderRate]); 
     }
     //console.log("정렬전=========="+beforeSortNames);
+    console.log("현 정렬기준 =========="+currentSortingOrder);
     beforeSortNames.sort(function(a,b){
         // 방장,화이트보드,화면공유, 비디오는 우선정렬
         if(a[2] < b[2]) return -1;
         if(a[2] > b[2]) return 1;
        
-        // 나머진 이름으로 내림차순
-        if (a[0] < b[0]) return -1;
-        if (a[0] > b[0]) return 1;
-        return 0;
+        // 나머진 이름으로 정렬
+        if(currentSortingOrder=="오름차순") {
+            if (a[0] > b[0]) return -1;
+            if (a[0] < b[0]) return 1;
+            return 0;
+        }else {
+            if (a[0] < b[0]) return -1;
+            if (a[0] > b[0]) return 1;
+            return 0;
+        }
+        
     });
     //console.log(beforeSortNames);
     var afterSortedIds:string[] = [];

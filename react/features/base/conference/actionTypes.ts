@@ -246,6 +246,8 @@ export const SEND_TONES = 'SEND_TONES';
  */
 export const SET_FOLLOW_ME = 'SET_FOLLOW_ME';
 
+export const SET_CURRENT_SORTING_ORDER = 'SET_CURRENT_SORTING_ORDER';
+
 /**
  * The type of (redux) action which sets the obfuscated room name.
  *

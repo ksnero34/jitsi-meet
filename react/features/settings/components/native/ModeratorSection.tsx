@@ -2,7 +2,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { IReduxState } from '../../../app/types';
-import { setFollowMe, setStartMutedPolicy, setStartReactionsMuted } from '../../../base/conference/actions';
+import { setCurrentSortingOrder, setFollowMe, setStartMutedPolicy, setStartReactionsMuted } from '../../../base/conference/actions';
 import { updateSettings } from '../../../base/settings/actions';
 import Switch from '../../../base/ui/components/native/Switch';
 import { getModeratorTabProps } from '../../functions.native';
@@ -16,7 +16,8 @@ const ModeratorSection = () => {
         followMeEnabled,
         startAudioMuted,
         startVideoMuted,
-        startReactionsMuted
+        startReactionsMuted,
+        onSetCurrentSortingOrder
     } = useSelector((state: IReduxState) => getModeratorTabProps(state));
 
     const { disableReactionsModeration } = useSelector((state: IReduxState) => state['features/base/config']);

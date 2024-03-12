@@ -15,7 +15,8 @@
  *         startAudioOnly: boolean,
  *         startWithAudioMuted: boolean,
  *         startWithVideoMuted: boolean,
- *         startWithReactionsMuted: boolean
+ *         startWithReactionsMuted: boolean,
+ *         currentSortingOrder: string
  *     }
  * }
  */

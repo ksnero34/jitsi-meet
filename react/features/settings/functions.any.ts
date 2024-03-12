@@ -6,7 +6,9 @@ import { getFeatureFlag } from '../base/flags/functions';
 import i18next, { DEFAULT_LANGUAGE, LANGUAGES } from '../base/i18n/i18next';
 import { getLocalParticipant } from '../base/participants/functions';
 import { toState } from '../base/redux/functions';
+import { SORTINGORDERS } from '../base/settings/constants';
 import { getHideSelfView } from '../base/settings/functions.any';
+import { getCurrentSortingOrder } from '../base/conference/functions';
 import { parseStandardURIString } from '../base/util/uri';
 import { isStageFilmstripEnabled } from '../filmstrip/functions';
 import { isFollowMeActive } from '../follow-me/functions';
@@ -139,6 +141,7 @@ export function getModeratorTabProps(stateful: IStateful) {
     const { disableReactionsModeration } = state['features/base/config'];
     const followMeActive = isFollowMeActive(state);
     const showModeratorSettings = shouldShowModeratorSettings(state);
+    const sortingOrder = getCurrentSortingOrder(state);
 
     // The settings sections to display.
     return {
@@ -148,7 +151,11 @@ export function getModeratorTabProps(stateful: IStateful) {
         followMeEnabled: Boolean(conference && followMeEnabled),
         startReactionsMuted: Boolean(conference && startReactionsMuted),
         startAudioMuted: Boolean(conference && startAudioMutedPolicy),
-        startVideoMuted: Boolean(conference && startVideoMutedPolicy)
+        startVideoMuted: Boolean(conference && startVideoMutedPolicy),
+        currentSortingOrder: sortingOrder,
+        sortingOrders: SORTINGORDERS,
+        
+        
     };
 }
 

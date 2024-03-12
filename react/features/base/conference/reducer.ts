@@ -21,6 +21,7 @@ import {
     LOCK_STATE_CHANGED,
     P2P_STATUS_CHANGED,
     SET_ASSUMED_BANDWIDTH_BPS,
+    SET_CURRENT_SORTING_ORDER,
     SET_FOLLOW_ME,
     SET_OBFUSCATED_ROOM,
     SET_PASSWORD,
@@ -29,7 +30,7 @@ import {
     SET_START_MUTED_POLICY,
     SET_START_REACTIONS_MUTED
 } from './actionTypes';
-import { isRoomValid } from './functions';
+import { getCurrentSortingOrder, isRoomValid } from './functions';
 
 const DEFAULT_STATE = {
     assumedBandwidthBps: undefined,
@@ -40,7 +41,8 @@ const DEFAULT_STATE = {
     locked: undefined,
     membersOnly: undefined,
     password: undefined,
-    passwordRequired: undefined
+    passwordRequired: undefined,
+    currentSortingOrder: "내림차순"
 };
 
 export interface IJitsiConference {
@@ -152,6 +154,7 @@ export interface IConferenceState {
     startReactionsMuted?: boolean;
     startVideoMutedPolicy?: boolean;
     subject?: string;
+    currentSortingOrder?: string;
 }
 
 export interface IJitsiConferenceRoom {
@@ -247,6 +250,10 @@ ReducerRegistry.register<IConferenceState>('features/base/conference',
                 startAudioMutedPolicy: action.startAudioMutedPolicy,
                 startVideoMutedPolicy: action.startVideoMutedPolicy
             };
+        
+        case SET_CURRENT_SORTING_ORDER:
+            return _setCurrentSortingOrder(state,action.value);
+
         }
 
         return state;
@@ -579,3 +586,11 @@ function _setRoom(state: IConferenceState, action: AnyAction) {
     });
 }
 
+function _setCurrentSortingOrder(state: IConferenceState, value: string) {
+    let sortingorder = value;
+
+    return assign(state, {
+        error: undefined,
+        currentSortingOrder : sortingorder
+    });
+}

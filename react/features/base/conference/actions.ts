@@ -54,6 +54,7 @@ import {
     P2P_STATUS_CHANGED,
     SEND_TONES,
     SET_ASSUMED_BANDWIDTH_BPS,
+    SET_CURRENT_SORTING_ORDER,
     SET_FOLLOW_ME,
     SET_OBFUSCATED_ROOM,
     SET_PASSWORD,
@@ -787,6 +788,13 @@ export function setFollowMe(enabled: boolean) {
     return {
         type: SET_FOLLOW_ME,
         enabled
+    };
+}
+
+export function setCurrentSortingOrder(value: string) {
+    return {
+        type: SET_CURRENT_SORTING_ORDER,
+        value
     };
 }
 

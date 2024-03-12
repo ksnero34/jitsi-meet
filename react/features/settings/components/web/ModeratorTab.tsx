@@ -8,7 +8,7 @@ import AbstractDialogTab, {
 import { translate } from '../../../base/i18n/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import Checkbox from '../../../base/ui/components/web/Checkbox';
-
+import Select from '../../../base/ui/components/web/Select';
 /**
  * The type of the React {@code Component} props of {@link ModeratorTab}.
  */
@@ -51,6 +51,10 @@ export interface IProps extends AbstractDialogTabProps, WithTranslation {
      * enabled.
      */
     startVideoMuted: boolean;
+
+    currentSortingOrder: string;
+
+    sortingOrders: Array<string>;
 }
 
 const styles = (theme: Theme) => {
@@ -92,6 +96,7 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
         this._onStartVideoMutedChanged = this._onStartVideoMutedChanged.bind(this);
         this._onStartReactionsMutedChanged = this._onStartReactionsMutedChanged.bind(this);
         this._onFollowMeEnabledChanged = this._onFollowMeEnabledChanged.bind(this);
+        this._onSortingOrderSelect = this._onSortingOrderSelect.bind(this);
     }
 
     /**
@@ -193,7 +198,42 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
                             label = { t('settings.startReactionsMuted') }
                             name = 'start-reactions-muted'
                             onChange = { this._onStartReactionsMutedChanged } /> }
+                {this._renderSortingOrder()}
             </div>
+        );
+    }
+
+    // 참석자 화면 및 타일뷰 화면 정렬 기준 설정
+    _onSortingOrderSelect(e: React.ChangeEvent<HTMLSelectElement>) {
+        const selectedSortingOrder = e.target.value;
+        
+        super._onChange({ currentSortingOrder: selectedSortingOrder });
+    }
+
+    _renderSortingOrder() {
+        const {
+            classes,
+            currentSortingOrder,
+            sortingOrders,
+            t
+        } = this.props;
+
+        const sortingOrderItems
+            = sortingOrders.map((sortingOrder: string) => {
+                return {
+                    value: sortingOrder,
+                    label: t(`sortingorders:${sortingOrder}`)
+                };
+            });
+
+        return (
+            <Select
+                className = { classes.bottomMargin }
+                id = 'moderator-soringorder-select'
+                label = { t('settings.sortingOrder') }
+                onChange = { this._onSortingOrderSelect }
+                options = { sortingOrderItems }
+                value = { currentSortingOrder } />
         );
     }
 }

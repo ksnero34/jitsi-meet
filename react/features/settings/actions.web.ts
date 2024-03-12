@@ -4,6 +4,7 @@ import { IStore } from '../app/types';
 import { setTokenAuthUrlSuccess } from '../authentication/actions.web';
 import { isTokenAuthEnabled } from '../authentication/functions';
 import {
+    setCurrentSortingOrder,
     setFollowMe,
     setStartMutedPolicy,
     setStartReactionsMuted
@@ -176,6 +177,10 @@ export function submitModeratorTab(newState: any) {
             || newState.startVideoMuted !== currentState.startVideoMuted) {
             dispatch(setStartMutedPolicy(
                 newState.startAudioMuted, newState.startVideoMuted));
+        }
+
+        if (newState.currentSortingOrder !== currentState.currentSortingOrder) {
+            dispatch(setCurrentSortingOrder(newState.currentSortingOrder));
         }
     };
 }
