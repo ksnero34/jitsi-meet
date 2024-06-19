@@ -6,6 +6,7 @@ import { DEFAULT_ICON } from '../base/icons/svg/constants';
 import { IProps } from '../base/toolbox/components/AbstractButton';
 
 import ToolbarButton from './ToolbarButton';
+import { setCurrentSortingOrder } from '../base/conference/actions';
 
 const { api } = window.alwaysOnTop;
 
@@ -55,6 +56,7 @@ export default class VideoMuteButton extends Component<Props, State> {
             = this._videoAvailabilityListener.bind(this);
         this._videoMutedListener = this._videoMutedListener.bind(this);
         this._onClick = this._onClick.bind(this);
+        this._currentSortingOrderListener = this._currentSortingOrderListener.bind(this);
     }
 
     /**
@@ -66,6 +68,7 @@ export default class VideoMuteButton extends Component<Props, State> {
     componentDidMount() {
         api.on('videoAvailabilityChanged', this._videoAvailabilityListener);
         api.on('videoMuteStatusChanged', this._videoMutedListener);
+        api.on('sortingOrderChanged', this._currentSortingOrderListener);
 
         Promise.all([
             api.isVideoAvailable(),
@@ -136,6 +139,13 @@ export default class VideoMuteButton extends Component<Props, State> {
      */
     _videoAvailabilityListener({ available }: { available: boolean; }) {
         this.setState({ videoAvailable: available });
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    _currentSortingOrderListener({ value }: { value: string; }) {
+        // api.executeCommand('setCurrentSortingOrder', value);
+        setCurrentSortingOrder(value);
+
     }
 
     /**

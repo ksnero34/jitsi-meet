@@ -15,15 +15,18 @@ import {
 } from '../../react/features/av-moderation/actions';
 import { isEnabledFromState } from '../../react/features/av-moderation/functions';
 import {
+    currentSortingOrderChanged,
     endConference,
     sendTones,
     setAssumedBandwidthBps,
+    setCurrentSortingOrder,
     setFollowMe,
     setLocalSubject,
     setPassword,
     setSubject
 } from '../../react/features/base/conference/actions';
-import { getCurrentConference, isP2pActive } from '../../react/features/base/conference/functions';
+// eslint-disable-next-line max-len
+import { getCurrentConference, getCurrentSortingOrder, isP2pActive } from '../../react/features/base/conference/functions';
 import { overwriteConfig } from '../../react/features/base/config/actions';
 import { getWhitelistedJSON } from '../../react/features/base/config/functions.any';
 import { toggleDialog } from '../../react/features/base/dialog/actions';
@@ -825,6 +828,18 @@ function initCommands() {
         },
         'toggle-whiteboard': () => {
             APP.store.dispatch(toggleWhiteboard());
+        },
+        'set-current-sorting-order': value => {
+
+            APP.store.dispatch(setCurrentSortingOrder(value));
+        },
+        'get-current-sorting-order': () => {
+            APP.store.dispatch(getCurrentSortingOrder());
+        },
+        'sorting-order-changed': value => {
+            APP.store.dispatch(currentSortingOrderChanged(value));
+
+            // APP.conference.currentSortingOrderChanged(value);
         }
     };
     transport.on('event', ({ data, name }) => {
@@ -1617,6 +1632,14 @@ class API {
         this._sendEvent({
             name: 'audio-mute-status-changed',
             muted
+        });
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    notifyCurrentSortingOrderChanged(value) {
+        this._sendEvent({
+            name: 'sorting-order-changed',
+            value
         });
     }
 

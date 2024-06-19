@@ -53,5 +53,7 @@ export default {
     /**
      * Notifies that the raise hand has been changed.
      */
-    LOCAL_RAISE_HAND_CHANGED: 'UI.local_raise_hand_changed'
+    LOCAL_RAISE_HAND_CHANGED: 'UI.local_raise_hand_changed',
+
+    CURRENT_SORTING_ORDER_CHANGED: 'UI.current_sorting_order_changed'
 };

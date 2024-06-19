@@ -9,6 +9,7 @@ import { translate } from '../../../base/i18n/functions';
 import { withPixelLineHeight } from '../../../base/styles/functions.web';
 import Checkbox from '../../../base/ui/components/web/Checkbox';
 import Select from '../../../base/ui/components/web/Select';
+
 /**
  * The type of the React {@code Component} props of {@link ModeratorTab}.
  */
@@ -97,6 +98,7 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
         this._onStartReactionsMutedChanged = this._onStartReactionsMutedChanged.bind(this);
         this._onFollowMeEnabledChanged = this._onFollowMeEnabledChanged.bind(this);
         this._onSortingOrderSelect = this._onSortingOrderSelect.bind(this);
+        //this._currentSortingOrderListener = this._currentSortingOrderListener.bind(this);
     }
 
     /**
@@ -146,6 +148,11 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
     _onFollowMeEnabledChanged({ target: { checked } }: React.ChangeEvent<HTMLInputElement>) {
         super._onChange({ followMeEnabled: checked });
     }
+
+    // eslint-disable-next-line require-jsdoc
+    // _currentSortingOrderListener({ value }: { value: string; }) {
+    //     super._onChange({ currentSortingOrder: value });
+    // }
 
     /**
      * Implements React's {@link Component#render()}.
@@ -204,12 +211,14 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
     }
 
     // 참석자 화면 및 타일뷰 화면 정렬 기준 설정
+    // eslint-disable-next-line require-jsdoc
     _onSortingOrderSelect(e: React.ChangeEvent<HTMLSelectElement>) {
         const selectedSortingOrder = e.target.value;
-        
+
         super._onChange({ currentSortingOrder: selectedSortingOrder });
     }
 
+    // eslint-disable-next-line require-jsdoc
     _renderSortingOrder() {
         const {
             classes,
@@ -226,10 +235,12 @@ class ModeratorTab extends AbstractDialogTab<IProps, any> {
                 };
             });
 
+        //api.on('sortingOrderChanged', this._currentSortingOrderListener);
+
         return (
             <Select
                 className = { classes.bottomMargin }
-                id = 'moderator-soringorder-select'
+                id = 'moderator-sortingorder-select'
                 label = { t('settings.sortingOrder') }
                 onChange = { this._onSortingOrderSelect }
                 options = { sortingOrderItems }

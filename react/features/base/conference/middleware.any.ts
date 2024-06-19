@@ -42,6 +42,7 @@ import {
     CONFERENCE_JOINED,
     CONFERENCE_SUBJECT_CHANGED,
     CONFERENCE_WILL_LEAVE,
+    CURRENT_SORTING_ORDER_CHANGED,
     P2P_STATUS_CHANGED,
     SEND_TONES,
     SET_ASSUMED_BANDWIDTH_BPS,
@@ -119,6 +120,9 @@ MiddlewareRegistry.register(store => next => action => {
 
     case SET_ASSUMED_BANDWIDTH_BPS:
         return _setAssumedBandwidthBps(store, next, action);
+
+    case CURRENT_SORTING_ORDER_CHANGED:
+        return _currentSortingOrderChanged(next, action);
     }
 
     return next(action);
@@ -683,6 +687,18 @@ function _p2pStatusChanged(next: Function, action: AnyAction) {
 
     if (typeof APP !== 'undefined') {
         APP.API.notifyP2pStatusChanged(action.p2p);
+    }
+
+    return result;
+}
+
+// eslint-disable-next-line require-jsdoc
+function _currentSortingOrderChanged(next: Function, action: AnyAction) {
+    const result = next(action);
+
+    if (typeof APP !== 'undefined') {
+        // APP.UI.emitEvent(UIEvents.CURRENT_SORTING_ORDER_CHANGED, action.value);
+        APP.API.notifyCurrentSortingOrderChanged(action.value);
     }
 
     return result;

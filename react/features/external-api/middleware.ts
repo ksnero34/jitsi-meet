@@ -3,9 +3,11 @@ import { getJitsiMeetTransport } from '../../../modules/transport';
 import {
     CONFERENCE_FAILED,
     CONFERENCE_JOINED,
+    CURRENT_SORTING_ORDER_CHANGED,
     DATA_CHANNEL_CLOSED,
     DATA_CHANNEL_OPENED,
-    KICKED_OUT
+    KICKED_OUT,
+    SET_CURRENT_SORTING_ORDER
 } from '../base/conference/actionTypes';
 import { SET_CONFIG } from '../base/config/actionTypes';
 import { NOTIFY_CAMERA_ERROR, NOTIFY_MIC_ERROR } from '../base/devices/actionTypes';
@@ -231,6 +233,10 @@ MiddlewareRegistry.register(store => next => action => {
 
     case SUBMIT_FEEDBACK_SUCCESS:
         APP.API.notifyFeedbackSubmitted();
+        break;
+
+    case CURRENT_SORTING_ORDER_CHANGED:
+        APP.API.notifyCurrentSortingOrderChanged(action.value);
         break;
     }
 

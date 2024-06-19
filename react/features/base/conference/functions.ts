@@ -45,9 +45,7 @@ export const getConferenceState = (state: IReduxState) => state['features/base/c
  */
 export const getIsConferenceJoined = (state: IReduxState) => Boolean(getConferenceState(state).conference);
 
-export const getCurrentSortingOrder = (state: IReduxState) => {
-    return state['features/base/conference'].currentSortingOrder;
-}
+export const getCurrentSortingOrder = (state: IReduxState) => getConferenceState(state).currentSortingOrder;
 
 /**
  * Attach a set of local tracks to a conference.

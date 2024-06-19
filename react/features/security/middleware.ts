@@ -1,8 +1,7 @@
 import { AnyAction } from 'redux';
+
 import { IStore } from '../app/types';
-
-
-import { 
+import {
     getParticipantCount,
     isLocalParticipantModerator
 } from '../base/participants/functions';
@@ -10,10 +9,8 @@ import { PARTICIPANT_UPDATED } from '../base/participants/actionTypes';
 import MiddlewareRegistry from '../base/redux/MiddlewareRegistry';
 import StateListenerRegistry  from '../base/redux/StateListenerRegistry';
 
-import { toggleSecurityDialog, toggleCookieDialog, toggleCertificationDialog } from './actions';
-
 import { AUTHENTICATE_ACCOUNT } from './actionTypes';
-
+import { toggleSecurityDialog, toggleCookieDialog, toggleCertificationDialog } from './actions';
 import { setRandomPassword, authenticateAccount } from './functions';
 
 /**
@@ -30,49 +27,55 @@ import { setRandomPassword, authenticateAccount } from './functions';
  */
 
 
- MiddlewareRegistry.register((store: IStore) => (next: Function) => async (action: AnyAction) => {
+MiddlewareRegistry.register((store: IStore) => (next: Function) => async (action: AnyAction) => {
     switch (action.type) {
-        case AUTHENTICATE_ACCOUNT: {
-            const result = next(action);
-            const { dispatch, getState } = store;
-            const state = getState();
-            const { conference, locked } = state['features/base/conference'];
-            console.log(isLocalParticipantModerator(state));
-            console.log(getParticipantCount(state));
-            if(!isLocalParticipantModerator(state) && getParticipantCount(state) === 1 && !locked) {
-                setRandomPassword(conference, dispatch, state);
-                
-                const response = await authenticateAccount();
-                const status = response.status;
 
-                if(status === 200) {    // 최초 접속 또는 30일 이내 접속
-                    const json = await response.json();
-                    APP.conference.stfNo = json.data.stfNo;
-                    APP.conference._writeLog('Valid Cookie');
-                    dispatch(toggleSecurityDialog());
-                }
-                else if(status === 401) {   // 30일 초과 미접속으로 계정 잠금 상태
-                    const json = await response.json();
-                    APP.conference.stfNo = json.data.stfNo;
-                    APP.conference._writeLog('Locked');
-                    dispatch(toggleCertificationDialog());
-                }
-                else {
-                    //통신불가 => 로컬 개발시 수정
-                    // APP.conference._writeLog('Invalid Cookie');
-                    // dispatch(toggleCookieDialog());
-                    //200
-                    APP.conference.stfNo = '8094310';
-                    APP.conference._writeLog('Valid Cookie');
-                    dispatch(toggleSecurityDialog());
-                    //401
-                    // APP.conference.stfNo = '8094310';
-                    // APP.conference._writeLog('Locked');
-                    // dispatch(toggleCertificationDialog());
-                }
+    case AUTHENTICATE_ACCOUNT: {
+        const result = next(action);
+        const { dispatch, getState } = store;
+        const state = getState();
+        const { conference, locked } = state['features/base/conference'];
+
+        console.log(isLocalParticipantModerator(state));
+        console.log(getParticipantCount(state));
+
+        if (!isLocalParticipantModerator(state) && getParticipantCount(state) === 1 && !locked) {
+            setRandomPassword(conference, dispatch, state);
+
+            const response = await authenticateAccount();
+            const status = response.status;
+
+            if (status === 200) { // 최초 접속 또는 30일 이내 접속
+                const json = await response.json();
+
+                APP.conference.stfNo = json.data.stfNo;
+                APP.conference._writeLog('Valid Cookie');
+                dispatch(toggleSecurityDialog());
+            } else if (status === 401) { // 30일 초과 미접속으로 계정 잠금 상태
+                const json = await response.json();
+
+                APP.conference.stfNo = json.data.stfNo;
+                APP.conference._writeLog('Locked');
+                dispatch(toggleCertificationDialog());
+            } else {
+                // 통신불가 => 로컬 개발시 수정
+                APP.conference._writeLog('Invalid Cookie');
+                dispatch(toggleCookieDialog());
+
+                // 200
+                // APP.conference.stfNo = '8094310';
+                // APP.conference._writeLog('Valid Cookie');
+                // dispatch(toggleSecurityDialog());
+
+                // 401
+                // APP.conference.stfNo = '8094310';
+                // APP.conference._writeLog('Locked');
+                // dispatch(toggleCertificationDialog());
             }
-            return result;
         }
+
+        return result;
+    }
         // case PARTICIPANT_UPDATED: {
         //     const result = next(action);
         //     //const { participant: p } = action;

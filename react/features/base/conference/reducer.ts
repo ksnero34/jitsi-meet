@@ -18,6 +18,7 @@ import {
     CONFERENCE_TIMESTAMP_CHANGED,
     CONFERENCE_WILL_JOIN,
     CONFERENCE_WILL_LEAVE,
+    CURRENT_SORTING_ORDER_CHANGED,
     LOCK_STATE_CHANGED,
     P2P_STATUS_CHANGED,
     SET_ASSUMED_BANDWIDTH_BPS,
@@ -42,7 +43,7 @@ const DEFAULT_STATE = {
     membersOnly: undefined,
     password: undefined,
     passwordRequired: undefined,
-    currentSortingOrder: "내림차순"
+    currentSortingOrder: undefined
 };
 
 export interface IJitsiConference {
@@ -125,6 +126,9 @@ export interface IJitsiConference {
     startVerification: Function;
     stopRecording: Function;
     toggleE2EE: Function;
+    // eslint-disable-next-line typescript-sort-keys/interface
+    getCurrentSortingOrder: Function;
+    setCurrentSortingOrder: Function;
 }
 
 export interface IConferenceState {
@@ -154,6 +158,7 @@ export interface IConferenceState {
     startReactionsMuted?: boolean;
     startVideoMutedPolicy?: boolean;
     subject?: string;
+    // eslint-disable-next-line typescript-sort-keys/interface
     currentSortingOrder?: string;
 }
 
@@ -250,10 +255,19 @@ ReducerRegistry.register<IConferenceState>('features/base/conference',
                 startAudioMutedPolicy: action.startAudioMutedPolicy,
                 startVideoMutedPolicy: action.startVideoMutedPolicy
             };
-        
-        case SET_CURRENT_SORTING_ORDER:
-            return _setCurrentSortingOrder(state,action.value);
 
+        case SET_CURRENT_SORTING_ORDER:
+            APP.API.notifyCurrentSortingOrderChanged(action.value);
+
+            return set(state, 'currentSortingOrder', action.value);
+
+            // set(state,'currentSortingOrder',action.value);
+
+        case CURRENT_SORTING_ORDER_CHANGED:
+
+            APP.API.notifyCurrentSortingOrderChanged(action.value);
+
+            return set(state, 'currentSortingOrder', action.value);
         }
 
         return state;
@@ -332,6 +346,7 @@ function _conferenceFailed(state: IConferenceState, { conference, error }: {
         joining: undefined,
         leaving: undefined,
         lobbyWaitingForHost,
+        currentSortingOrder: undefined,
 
         /**
          * The indicator of how the conference/room is locked. If falsy, the
@@ -583,14 +598,5 @@ function _setRoom(state: IConferenceState, action: AnyAction) {
     return assign(state, {
         error: undefined,
         room
-    });
-}
-
-function _setCurrentSortingOrder(state: IConferenceState, value: string) {
-    let sortingorder = value;
-
-    return assign(state, {
-        error: undefined,
-        currentSortingOrder : sortingorder
     });
 }

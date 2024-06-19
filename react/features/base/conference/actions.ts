@@ -45,6 +45,7 @@ import {
     CONFERENCE_WILL_INIT,
     CONFERENCE_WILL_JOIN,
     CONFERENCE_WILL_LEAVE,
+    CURRENT_SORTING_ORDER_CHANGED,
     DATA_CHANNEL_CLOSED,
     DATA_CHANNEL_OPENED,
     E2E_RTT_CHANGED,
@@ -259,7 +260,9 @@ function _addConferenceListeners(conference: IJitsiConference, dispatch: IStore[
             id,
             botType
         })));
-
+    conference.on(
+        JitsiConferenceEvents.CURRENT_SORTING_ORDER_CHANGED,
+        (value: string) => dispatch(currentSortingOrderChanged(value)));
     conference.addCommandListener(
         AVATAR_URL_COMMAND,
         (data: { value: string; }, id: string) => dispatch(participantUpdated({
@@ -791,9 +794,18 @@ export function setFollowMe(enabled: boolean) {
     };
 }
 
+// eslint-disable-next-line require-jsdoc
 export function setCurrentSortingOrder(value: string) {
     return {
         type: SET_CURRENT_SORTING_ORDER,
+        value
+    };
+}
+
+// eslint-disable-next-line require-jsdoc
+export function currentSortingOrderChanged(value: string) {
+    return {
+        type: CURRENT_SORTING_ORDER_CHANGED,
         value
     };
 }

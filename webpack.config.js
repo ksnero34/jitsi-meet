@@ -304,7 +304,7 @@ module.exports = (_env, argv) => {
                 ...config.plugins,
                 ...getBundleAnalyzerPlugin(analyzeBundle, 'alwaysontop')
             ],
-            performance: getPerformanceHints(perfHintOptions, 800 * 1024)
+            performance: getPerformanceHints(perfHintOptions, 900 * 1024)
         }),
         Object.assign({}, config, {
             entry: {

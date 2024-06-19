@@ -35,6 +35,7 @@ import {
     conferenceUniqueIdSet,
     conferenceWillInit,
     conferenceWillLeave,
+    currentSortingOrderChanged,
     dataChannelClosed,
     dataChannelOpened,
     e2eRttChanged,
@@ -2000,6 +2001,14 @@ export default {
             }
         );
 
+        APP.UI.addListener(UIEvents.CURRENT_SORTING_ORDER_CHANGED,
+            this.currentSortingOrderChanged.bind(this));
+
+        room.on(
+            JitsiConferenceEvents.CURRENT_SORTING_ORDER_CHANGED,
+            value =>
+                APP.store.dispatch(currentSortingOrderChanged(value)));
+
         // call hangup
         APP.UI.addListener(UIEvents.HANGUP, () => {
             this.hangup(true);
@@ -2560,6 +2569,11 @@ export default {
         APP.store.dispatch(updateSettings({
             displayName: formattedNickname
         }));
+    },
+
+    currentSortingOrderChanged(value = '') {
+
+        APP.store.dispatch(currentSortingOrderChanged(value));
     },
 
     /**

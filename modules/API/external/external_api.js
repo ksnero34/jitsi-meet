@@ -91,7 +91,10 @@ const commands = {
     toggleTileView: 'toggle-tile-view',
     toggleVirtualBackgroundDialog: 'toggle-virtual-background',
     toggleVideo: 'toggle-video',
-    toggleWhiteboard: 'toggle-whiteboard'
+    toggleWhiteboard: 'toggle-whiteboard',
+    setCurrentSortingOrder: 'set-current-sorting-order',
+    getCurrentSortingOrder: 'get-current-sorting-order',
+    currentSortingorderChanged: 'sorting-order-changed'
 };
 
 /**
@@ -162,7 +165,8 @@ const events = {
     'toolbar-button-clicked': 'toolbarButtonClicked',
     'transcribing-status-changed': 'transcribingStatusChanged',
     'transcription-chunk-received': 'transcriptionChunkReceived',
-    'whiteboard-status-changed': 'whiteboardStatusChanged'
+    'whiteboard-status-changed': 'whiteboardStatusChanged',
+    'sorting-order-changed': 'currentSortingOrderChanged'
 };
 
 const requests = {
@@ -393,6 +397,7 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
         this._participants = {};
         this._myUserID = undefined;
         this._onStageParticipant = undefined;
+        this._currentSortingOrder = undefined;
         this._setupListeners();
         id++;
     }
@@ -681,6 +686,10 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
                 break;
             case 'breakout-rooms-updated':
                 this.updateNumberOfParticipants(data.rooms);
+                break;
+            case 'sorting-order-changed':
+                this._currentSortingOrder = data.value;
+                this.emit('sortingOrderChanged');
                 break;
             case 'local-storage-changed':
                 jitsiLocalStorage.setItem('jitsiLocalStorage', data.localStorageContent);
@@ -1458,6 +1467,15 @@ export default class JitsiMeetExternalAPI extends EventEmitter {
      */
     toggleE2EE(enabled) {
         this.executeCommand('toggleE2EE', enabled);
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    setCurrentSortingOrder(value) {
+        this.executeCommand('setCurrentSortingOrder', value);
+    }
+    // eslint-disable-next-line require-jsdoc
+    getCurrentSortingOrder(value) {
+        this.executeCommand('getCurrentSortingOrder', value);
     }
 
     /**

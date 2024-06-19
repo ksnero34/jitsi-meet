@@ -61,3 +61,13 @@ StateListenerRegistry.register(
         APP.API.notifyOnStageParticipantChanged(participantId);
     }
 );
+
+/**
+ * test
+ */
+StateListenerRegistry.register(
+    /* selector */ state => state['features/base/conference'].currentSortingOrder,
+    /* listener */ currentSortingOrder => {
+        APP.API.notifyCurrentSortingOrderChanged(currentSortingOrder);
+    }
+);

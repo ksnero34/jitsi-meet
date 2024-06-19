@@ -9,10 +9,11 @@ import { LAYOUTS } from '../../../video-layout/constants';
 import { getCurrentLayout } from '../../../video-layout/functions.web';
 import { FILMSTRIP_TYPE, TILE_ASPECT_RATIO, TILE_HORIZONTAL_MARGIN } from '../../constants';
 import { getActiveParticipantsIds, showGridInVerticalView } from '../../functions.web';
-
+import { getConferenceState } from '../../../base/conference/functions';
 import Thumbnail from './Thumbnail';
-import { isParticipantVideoMuted } from '../../../base/tracks/functions.any';
+import { isParticipantAudioMuted, isParticipantVideoMuted } from '../../../base/tracks/functions.any';
 import { getModeratorTabProps } from '../../../settings/functions.web';
+import { setCurrentSortingOrder } from '../../../base/conference/actions';
 
 /**
  * The type of the React {@code Component} props of {@link ThumbnailWrapper}.
@@ -164,9 +165,16 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
     const remoteParticipants = stageFilmstrip ? sortedActiveParticipants : remote;
     const remoteParticipantsLength = remoteParticipants.length;
     const localId = getLocalParticipant(state)?.id;
-    //설정의 방장탭에서 설정된 정렬기준
-    const currentSortingOrder = getModeratorTabProps(state).currentSortingOrder;
-    //참석자 정렬 기능 추가(본인외)
+
+    // 설정의 방장탭에서 설정된 정렬기준
+    // eslint-disable-next-line max-len
+    if (getConferenceState(state).currentSortingOrder === undefined) {
+        setCurrentSortingOrder('내림차순');
+    }
+    const currentSortingOrder = getConferenceState(state).currentSortingOrder;
+
+    // 참석자 정렬 기능 추가(본인외)
+
     var beforeSortIds = remoteParticipants;
     var beforeSortNames:any[][] = [];
     // 이름 , id , 방장여부, 공유화면여부, 화이트보드여부, 비디오 온여부
@@ -177,15 +185,16 @@ function _mapStateToProps(state: IReduxState, ownProps: { columnIndex: number;
         if(isParticipantModerator(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 1;
         else if (isScreenShareParticipant(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 2;
         else if (isWhiteboardParticipant(getParticipantById(state,beforeSortIds[sortIdx]))) orderRate = 3;
-        else if (!isParticipantVideoMuted(getParticipantById(state,beforeSortIds[sortIdx]),state)) orderRate = 4;
-        else orderRate = 5;
+        else if (!isParticipantAudioMuted(getParticipantById(state,beforeSortIds[sortIdx]),state)) orderRate = 4;
+        else if (!isParticipantVideoMuted(getParticipantById(state,beforeSortIds[sortIdx]),state)) orderRate = 5;
+        else orderRate = 6;
 
         beforeSortNames.push([getParticipantDisplayName(state,beforeSortIds[sortIdx]),beforeSortIds[sortIdx],orderRate]); 
     }
     //console.log("정렬전=========="+beforeSortNames);
-    console.log("현 정렬기준 =========="+currentSortingOrder);
+    //console.log("현 정렬기준 =========="+currentSortingOrder);
     beforeSortNames.sort(function(a,b){
-        // 방장,화이트보드,화면공유, 비디오는 우선정렬
+        // 방장,화이트보드,화면공유, 오디오,비디오는 우선정렬
         if(a[2] < b[2]) return -1;
         if(a[2] > b[2]) return 1;
        
