@@ -97,6 +97,12 @@ function PasswordSection({
             return;
         }
         setPassword(conference, conference.lock, enteredPassword);
+
+        // 방장이 회의실 잠금시 비밀번호 세팅
+        let globalstate = APP.store.getState()['features/base/conference'];
+
+        globalstate.beforeEnteredPassword = enteredPassword;
+        globalstate.beforePasswordCorrect = true;
     }
 
     /**

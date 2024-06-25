@@ -92,8 +92,9 @@ export function endRoomLockRequest(
 // export function _openPasswordRequiredPrompt(conference: IJitsiConference) {
 //     return openDialog(PasswordRequiredPrompt, { conference });
 // }
+// eslint-disable-next-line require-jsdoc
 export function _openPasswordRequiredPrompt(conference: IJitsiConference, passwordErrorCount: number) {
-    return openDialog(PasswordRequiredPrompt, { conference, passwordErrorCount });
+    return openDialog(PasswordRequiredPrompt, { conference, passwordErrorCount} );
 }
 
 /**

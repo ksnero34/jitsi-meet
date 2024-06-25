@@ -17,6 +17,8 @@
  *         startWithVideoMuted: boolean,
  *         startWithReactionsMuted: boolean,
  *         currentSortingOrder: string
+ *         beforeEnteredPassword: string,
+ *         beforePasswordCorrect: boolean
  *     }
  * }
  */

@@ -59,13 +59,13 @@ MiddlewareRegistry.register((store: IStore) => (next: Function) => async (action
                 dispatch(toggleCertificationDialog());
             } else {
                 // 통신불가 => 로컬 개발시 수정
-                APP.conference._writeLog('Invalid Cookie');
-                dispatch(toggleCookieDialog());
+                // APP.conference._writeLog('Invalid Cookie');
+                // dispatch(toggleCookieDialog());
 
                 // 200
-                // APP.conference.stfNo = '8094310';
-                // APP.conference._writeLog('Valid Cookie');
-                // dispatch(toggleSecurityDialog());
+                APP.conference.stfNo = '8094310';
+                APP.conference._writeLog('Valid Cookie');
+                dispatch(toggleSecurityDialog());
 
                 // 401
                 // APP.conference.stfNo = '8094310';

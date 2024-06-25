@@ -21,7 +21,9 @@ import { ISettingsState } from './reducer';
  *         startWithAudioMuted: boolean,
  *         startWithVideoMuted: boolean,
  *         startWithReactionsMuted: boolean,
- *         currentSortingOrder: string
+ *         currentSortingOrder: string,
+ *         beforeEnteredPassword: string,
+ *         beforePasswordCorrect: boolean
  *     }
  * }}
  */

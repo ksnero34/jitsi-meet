@@ -56,6 +56,8 @@ import {
     SEND_TONES,
     SET_ASSUMED_BANDWIDTH_BPS,
     SET_CURRENT_SORTING_ORDER,
+    SET_BEFORE_ENTERED_PASSWORD,
+    SET_BEFORE_PASSWORD_CORRECT,
     SET_FOLLOW_ME,
     SET_OBFUSCATED_ROOM,
     SET_PASSWORD,
@@ -806,6 +808,22 @@ export function setCurrentSortingOrder(value: string) {
 export function currentSortingOrderChanged(value: string) {
     return {
         type: CURRENT_SORTING_ORDER_CHANGED,
+        value
+    };
+}
+
+// eslint-disable-next-line require-jsdoc
+export function setBeforeEnteredPassword(value: string) {
+    return {
+        type: SET_BEFORE_ENTERED_PASSWORD,
+        value
+    };
+}
+
+// eslint-disable-next-line require-jsdoc
+export function setBeforePasswordCorrect(value: boolean) {
+    return {
+        type: SET_BEFORE_PASSWORD_CORRECT,
         value
     };
 }

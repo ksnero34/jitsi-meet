@@ -87,6 +87,11 @@ MiddlewareRegistry.register(store => next => action => {
  */
 function _conferenceJoined({ dispatch }: IStore, next: Function, action: AnyAction) {
     APP.conference._writeLog('Join Room');
+    // 회의실 접속 후 비밀번호 오류회수 초기화
+    passwordErrorCount = -1;
+    let globalstate = APP.store.getState()['features/base/conference'];
+
+    globalstate.beforePasswordCorrect = true;
     dispatch(hideDialog(PasswordRequiredPrompt));
 
     return next(action);
@@ -109,6 +114,12 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
 
     if (conference && error.name === JitsiConferenceErrors.PASSWORD_REQUIRED) {
         passwordErrorCount++;
+
+        if (passwordErrorCount > 0) {
+            let globalstate = APP.store.getState()['features/base/conference'];
+
+            globalstate.beforePasswordCorrect = false;
+        }
         // XXX The feature room-lock affords recovery after CONFERENCE_FAILED
         // caused by JitsiConferenceErrors.PASSWORD_REQUIRED.
         if (typeof error.recoverable === 'undefined') {
@@ -121,6 +132,9 @@ function _conferenceFailed({ dispatch }: IStore, next: Function, action: AnyActi
         }
     } else {
         passwordErrorCount = -1;
+        let globalstate = APP.store.getState()['features/base/conference'];
+
+        globalstate.beforePasswordCorrect = true;
         dispatch(hideDialog(PasswordRequiredPrompt));
     }
 

@@ -570,6 +570,12 @@ export function sendLocalParticipant(
     conference?.setDisplayName(name);
 }
 
+// eslint-disable-next-line require-jsdoc
+export function getBeforeEnteredPassword(state: IReduxState) {
+
+    return state['features/base/conference'].beforeEnteredPassword;
+}
+
 /**
  * A safe implementation of lodash#startCase that doesn't deburr the string.
  *

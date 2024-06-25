@@ -250,6 +250,9 @@ export const SET_CURRENT_SORTING_ORDER = 'SET_CURRENT_SORTING_ORDER';
 
 export const CURRENT_SORTING_ORDER_CHANGED = 'CURRENT_SORTING_ORDER_CHANGED';
 
+export const SET_BEFORE_ENTERED_PASSWORD = 'SET_BEFORE_ENTERED_PASSWORD';
+
+export const SET_BEFORE_PASSWORD_CORRECT = 'SET_BEFORE_PASSWORD_CORRECT';
 /**
  * The type of (redux) action which sets the obfuscated room name.
  *

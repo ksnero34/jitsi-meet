@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
+import React, { Component, useRef } from 'react';
 import { WithTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 
-import { IStore } from '../../app/types';
-import { setPassword } from '../../base/conference/actions';
+import { IReduxState, IStore } from '../../app/types';
+import { setBeforeEnteredPassword, setPassword } from '../../base/conference/actions';
 import { IJitsiConference } from '../../base/conference/reducer';
 import { translate } from '../../base/i18n/functions';
 import Dialog from '../../base/ui/components/web/Dialog';
@@ -26,7 +26,7 @@ interface IProps extends WithTranslation {
      */
     dispatch: IStore['dispatch'];
 
-    passwordErrorCount: number,
+    passwordErrorCount: number;
 
 }
 
@@ -40,6 +40,8 @@ interface IState {
      * The password entered by the local participant.
      */
     password?: string;
+    // eslint-disable-next-line typescript-sort-keys/interface
+    isPasswordCorrect?: boolean;
 }
 
 /**
@@ -48,9 +50,11 @@ interface IState {
  */
 class PasswordRequiredPrompt extends Component<IProps, IState> {
     state = {
-        password: ''
+        password: '',
+        isPasswordCorrect: false
     };
-
+    inputRef: any;
+    // eslint-disable-next-line valid-jsdoc
     /**
      * Initializes a new PasswordRequiredPrompt instance.
      *
@@ -59,11 +63,55 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
      */
     constructor(props: IProps) {
         super(props);
+        // eslint-disable-next-line prefer-const
+        // const globalstate = getConferenceState(toState(getState));
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        let globalstate = APP.store.getState()['features/base/conference'];
+        console.log(`직전 패스워드 : ${globalstate.beforeEnteredPassword}`);
+        console.log(`직전 패스워드 옳음여부: ${globalstate.beforePasswordCorrect}`);
+
+        this.inputRef = React.createRef();
 
         // Bind event handlers so they are only bound once per instance.
         this._onPasswordChanged = this._onPasswordChanged.bind(this);
         this._onCancel = this._onCancel.bind(this);
         this._onSubmit = this._onSubmit.bind(this);
+
+
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    componentDidMount() {
+        let globalstate = APP.store.getState()['features/base/conference'];
+
+        if (globalstate.beforePasswordCorrect === true && globalstate.beforeEnteredPassword !== '') {
+            // 비밀번호가 맞으면 자동으로 입력하고 제출
+
+            this.setState({ password: globalstate.beforeEnteredPassword,
+                isPasswordCorrect: true });
+
+        }
+    }
+
+    // eslint-disable-next-line require-jsdoc
+    componentDidUpdate(prevProps: any, prevState: { isPasswordCorrect: any; }) {
+
+        let globalstate = APP.store.getState()['features/base/conference'];
+
+        if (globalstate.beforePasswordCorrect === true && globalstate.beforeEnteredPassword !== '' && !prevState.isPasswordCorrect) {
+
+            if (this.inputRef.current) {
+                this.inputRef.current.value = globalstate.beforeEnteredPassword;
+            }
+            setTimeout(() => {
+                const submitButton = document.getElementById('modal-dialog-ok-button');
+
+                if (submitButton) {
+                    submitButton.click();
+                }
+            }, 0);
+
+        }
     }
 
     /**
@@ -95,6 +143,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
         return (
             <div>
                 <Input
+                    ref={this.inputRef}
                     autoFocus = { true }
                     className = 'dialog-bottom-margin'
                     id = 'required-password-input'
@@ -104,7 +153,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
                     type = 'password'
                     disabled = { this.props.passwordErrorCount >= 5 }
                     value = { this.state.password } />
-                    <p className='description'>오류횟수 : {this.props.passwordErrorCount} { this.props.passwordErrorCount > 2 ? ' (5회 이상 틀리면 재접속이 필요합니다.)' : '' }</p>
+                    <p className = 'description'>오류횟수 : {this.props.passwordErrorCount} { this.props.passwordErrorCount > 2 ? ' (5회 이상 틀리면 재접속이 필요합니다.)' : '' }</p>
             </div>
         );
     }
@@ -120,6 +169,7 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
         this.setState({
             password: value
         });
+
     }
 
     /**
@@ -152,6 +202,37 @@ class PasswordRequiredPrompt extends Component<IProps, IState> {
         // again will be marked as locked.
         this.props.dispatch(
             setPassword(conference, conference.join, this.state.password));
+
+        //setBeforeEnteredPassword(this.state.password);
+
+        let globalstate = APP.store.getState()['features/base/conference'];
+
+        globalstate.beforeEnteredPassword = this.state.password;
+
+        // We have used the password so let's clean it.
+        this.setState({
+            password: undefined
+        });
+
+        return true;
+    }
+    // eslint-disable-next-line require-jsdoc
+    _onAutoSubmit() {
+        const { conference } = this.props;
+
+        const globalstate = APP.store.getState()['features/base/conference'];
+
+        this.setState({
+            password: globalstate.beforeEnteredPassword
+        });
+
+        // We received that password is required, but user is trying anyway to
+        // login without a password. Mark the room as not locked in case she
+        // succeeds (maybe someone removed the password meanwhile). If it is
+        // still locked, another password required will be received and the room
+        // again will be marked as locked.
+        this.props.dispatch(
+            setPassword(conference, conference.join, globalstate.beforeEnteredPassword));
 
         // We have used the password so let's clean it.
         this.setState({

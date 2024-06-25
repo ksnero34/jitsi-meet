@@ -23,6 +23,8 @@ import {
     P2P_STATUS_CHANGED,
     SET_ASSUMED_BANDWIDTH_BPS,
     SET_CURRENT_SORTING_ORDER,
+    SET_BEFORE_ENTERED_PASSWORD,
+    SET_BEFORE_PASSWORD_CORRECT,
     SET_FOLLOW_ME,
     SET_OBFUSCATED_ROOM,
     SET_PASSWORD,
@@ -43,7 +45,9 @@ const DEFAULT_STATE = {
     membersOnly: undefined,
     password: undefined,
     passwordRequired: undefined,
-    currentSortingOrder: undefined
+    currentSortingOrder: undefined,
+    beforeEnteredPassword: '',
+    beforePasswordCorrect: false
 };
 
 export interface IJitsiConference {
@@ -160,6 +164,9 @@ export interface IConferenceState {
     subject?: string;
     // eslint-disable-next-line typescript-sort-keys/interface
     currentSortingOrder?: string;
+    // eslint-disable-next-line typescript-sort-keys/interface
+    beforeEnteredPassword?: string;
+    beforePasswordCorrect?: boolean;
 }
 
 export interface IJitsiConferenceRoom {
@@ -268,6 +275,14 @@ ReducerRegistry.register<IConferenceState>('features/base/conference',
             APP.API.notifyCurrentSortingOrderChanged(action.value);
 
             return set(state, 'currentSortingOrder', action.value);
+
+        case SET_BEFORE_ENTERED_PASSWORD:
+
+            return set(state, 'beforeEnteredPassword', action.value);
+
+        case SET_BEFORE_PASSWORD_CORRECT:
+
+            return set(state, 'beforePasswordCorrect', action.value);
         }
 
         return state;
